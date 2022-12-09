@@ -1,0 +1,18 @@
+{
+  "required": false,
+  "minVersion": "0.7",
+  "mixinPriority": -69420,
+  "compatibilityLevel": "JAVA_8",
+  "package": "dev.fastmc.allocfix.mixins.main",
+  "refmap": "mixins.fastmc.refmap.json",
+  "client": [
+    "MixinEnumFacing",
+    "MixinTextFormatting",
+    "entity.MixinEntityDataManager",
+    "render.MixinBlockRenderLayer",
+    "world.MixinChunk",
+    "world.MixinPatchBlock",
+    "world.MixinWorld",
+    "world.MixinWorldServer"
+  ]
+}
