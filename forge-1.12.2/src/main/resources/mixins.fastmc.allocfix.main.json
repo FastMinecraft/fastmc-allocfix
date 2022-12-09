@@ -12,6 +12,7 @@
     "entity.MixinEntityDataManager",
     "render.MixinBlockInfo",
     "render.MixinBlockRenderLayer",
+    "render.MixinRenderGlobal",
     "render.MixinVisGraph",
     "world.MixinBiome",
     "world.MixinBiomeColorHelper",

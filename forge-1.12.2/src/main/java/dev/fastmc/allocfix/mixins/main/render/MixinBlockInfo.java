@@ -12,30 +12,30 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(BlockInfo.class)
 public abstract class MixinBlockInfo {
-    @Shadow
+    @Shadow(remap = false)
     private BlockPos blockPos;
 
-    @Shadow
+    @Shadow(remap = false)
     private IBlockAccess world;
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private boolean[][][] t;
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private int[][][] s;
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private int[][][] b;
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private float[][][] ao;
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private static EnumFacing[] SIDES;
-    @Shadow
+    @Shadow(remap = false)
     private IBlockState state;
 
-    @Shadow
+    @Shadow(remap = false)
     protected abstract float combine(
         int c,
         int s1,
@@ -47,10 +47,10 @@ public abstract class MixinBlockInfo {
         boolean t3
     );
 
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private float[][][][] skyLight;
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private float[][][][] blockLight;
 
@@ -60,12 +60,16 @@ public abstract class MixinBlockInfo {
      * @author Luna
      * @reason Memory allocation optimization
      */
-    @Overwrite
+    @Overwrite(remap = false)
     public void updateLightMatrix() {
-        for (int x = 1; x <= 1; x++) {
-            for (int y = 1; y <= 1; y++) {
-                for (int z = 1; z <= 1; z++) {
-                    mutableBlockPos.setPos(x + 1, y + 1, z + 1);
+        int basePosX = blockPos.getX() - 1;
+        int basePosY = blockPos.getY() - 1;
+        int basePosZ = blockPos.getZ() - 1;
+
+        for (int x = 0; x <= 2; x++) {
+            for (int y = 0; y <= 2; y++) {
+                for (int z = 0; z <= 2; z++) {
+                    mutableBlockPos.setPos(basePosX + x, basePosY + y, basePosZ + z);
                     IBlockState state = world.getBlockState(mutableBlockPos);
                     t[x][y][z] = state.getLightOpacity(world, mutableBlockPos) < 15;
                     int brightness = state.getPackedLightmapCoords(world, mutableBlockPos);

@@ -14,7 +14,7 @@ public class MixinBiome {
      * @author Luna
      * @reason Memory allocation optimization
      */
-    @Overwrite
+    @Overwrite(remap = false)
     public int getWaterColorMultiplier() {
         return waterColor;
     }
@@ -23,7 +23,7 @@ public class MixinBiome {
      * @author Luna
      * @reason Memory allocation optimization
      */
-    @Overwrite
+    @Overwrite(remap = false)
     public int getModdedBiomeGrassColor(int original) {
         return original;
     }
@@ -32,7 +32,7 @@ public class MixinBiome {
      * @author Luna
      * @reason Memory allocation optimization
      */
-    @Overwrite
+    @Overwrite(remap = false)
     public int getModdedBiomeFoliageColor(int original) {
         return original;
     }
