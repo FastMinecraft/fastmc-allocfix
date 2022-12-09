@@ -1,7 +1,7 @@
 package dev.fastmc.allocfix.mixins.main.world;
 
-import dev.fastmc.allocfix.mixin.IPatchedChunk;
-import dev.fastmc.allocfix.mixin.IPatchedWorld;
+import dev.fastmc.allocfix.mixins.IPatchedChunk;
+import dev.fastmc.allocfix.mixins.IPatchedWorld;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;

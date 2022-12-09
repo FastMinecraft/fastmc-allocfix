@@ -1,4 +1,4 @@
-package dev.fastmc.allocfix.mixin
+package dev.fastmc.allocfix.mixins
 
 import net.minecraft.world.EnumSkyBlock
 

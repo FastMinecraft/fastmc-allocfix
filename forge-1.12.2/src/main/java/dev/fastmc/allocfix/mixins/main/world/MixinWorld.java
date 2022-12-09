@@ -1,13 +1,12 @@
 package dev.fastmc.allocfix.mixins.main.world;
 
-import dev.fastmc.allocfix.mixin.IPatchedChunk;
-import dev.fastmc.allocfix.mixin.IPatchedIBlockAccess;
-import dev.fastmc.allocfix.mixin.IPatchedWorld;
+import dev.fastmc.allocfix.mixins.IPatchedChunk;
+import dev.fastmc.allocfix.mixins.IPatchedIBlockAccess;
+import dev.fastmc.allocfix.mixins.IPatchedWorld;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -15,6 +14,8 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.storage.WorldInfo;
+import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -23,9 +24,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.ArrayList;
+
 @Mixin(World.class)
 public abstract class MixinWorld implements IPatchedWorld, IPatchedIBlockAccess {
-
     @Shadow
     public abstract IBlockState getBlockState(BlockPos pos);
 
@@ -72,6 +74,14 @@ public abstract class MixinWorld implements IPatchedWorld, IPatchedIBlockAccess 
 
     @Shadow
     public abstract Chunk getChunk(BlockPos par1);
+
+    @Shadow @Final public boolean isRemote;
+
+    @Shadow protected WorldInfo worldInfo;
+
+    @Shadow(remap = false) public boolean captureBlockSnapshots;
+
+    @Shadow(remap = false) public ArrayList<BlockSnapshot> capturedBlockSnapshots;
 
     /**
      * @author Luna

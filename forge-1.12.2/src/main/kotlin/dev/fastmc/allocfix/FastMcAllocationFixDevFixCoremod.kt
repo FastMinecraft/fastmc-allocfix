@@ -7,12 +7,21 @@ import org.spongepowered.asm.mixin.Mixins
 
 @IFMLLoadingPlugin.Name("FastMcAllocationFix")
 @MCVersion("1.12.2")
-class FastMcAllocationFixCoremod : IFMLLoadingPlugin {
+class FastMcAllocationFixDevFixCoremod : IFMLLoadingPlugin {
+    private val enableMod = true
+
     init {
         MixinBootstrap.init()
-        Mixins.addConfigurations(
-            "mixins.fastmc.allocfix.main.json",
-        )
+        if (enableMod) {
+            Mixins.addConfigurations(
+                "mixins.fastmc.allocfix.main.json",
+                "mixins.fastmc.allocfix.devfix.json"
+            )
+        } else {
+            Mixins.addConfigurations(
+                "mixins.fastmc.allocfix.devfix.json"
+            )
+        }
     }
 
     override fun injectData(data: Map<String, Any>) {

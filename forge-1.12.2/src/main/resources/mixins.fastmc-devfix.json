@@ -1,0 +1,12 @@
+{
+  "required": false,
+  "minVersion": "0.7",
+  "compatibilityLevel": "JAVA_8",
+  "package": "dev.fastmc.allocfix.mixins.devfix",
+  "refmap": "mixins.fastmc.allocfix.refmap.json",
+  "client": [
+    "MixinASMModParser",
+    "MixinJarDiscoverer",
+    "MixinNetworkRegistry"
+  ]
+}
