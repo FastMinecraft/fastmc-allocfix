@@ -33,11 +33,7 @@ runVmOptions {
 
 plugins {
     id("me.luna.jaroptimizer").version("1.1")
-    id("dev.fastmc.modsetup.root")
-}
-
-apply {
-    plugin("dev.fastmc.modsetup.root.architectury")
+    id("dev.fastmc.modsetup.root").version("1.0-SNAPSHOT")
 }
 
 allprojects {
@@ -47,6 +43,7 @@ allprojects {
     repositories {
         mavenCentral()
         maven("https://libraries.minecraft.net")
+        maven("https://maven.fastmc.dev")
     }
 
     dependencies {
