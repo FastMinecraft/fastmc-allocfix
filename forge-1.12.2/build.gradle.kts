@@ -1,9 +1,10 @@
 import org.spongepowered.asm.gradle.plugins.MixinExtension
 
 forgeProject {
-    accessTransformer = "fastmc-alloc-fix-at.cfg"
-    coreModClass.set("dev.fastmc.allocfix.FastMcAllocationFixCoremod")
-    coreModClass.set("dev.fastmc.allocfix.FastMcAllocationFixDevFixCoremod")
+    accessTransformer = "fastmc-allocfix-at.cfg"
+    mixinConfig("mixins.fastmc.allocfix.main.json")
+    coreModClass.set("dev.fastmc.allocfix.FastMcAllocFixCoremod")
+    coreModClass.set("dev.fastmc.allocfix.FastMcAllocFixDevFixCoremod")
 }
 
 configure<MixinExtension> {

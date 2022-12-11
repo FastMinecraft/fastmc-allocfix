@@ -5,14 +5,23 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion
 import org.spongepowered.asm.launch.MixinBootstrap
 import org.spongepowered.asm.mixin.Mixins
 
-@IFMLLoadingPlugin.Name("FastMcAllocationFix")
+@IFMLLoadingPlugin.Name("FastMcAllocFix")
 @MCVersion("1.12.2")
-class FastMcAllocationFixCoremod : IFMLLoadingPlugin {
+class FastMcAllocFixDevFixCoremod : IFMLLoadingPlugin {
+    private val enableMod = true
+
     init {
         MixinBootstrap.init()
-        Mixins.addConfigurations(
-            "mixins.fastmc.allocfix.main.json",
-        )
+        if (enableMod) {
+            Mixins.addConfigurations(
+                "mixins.fastmc.allocfix.main.json",
+                "mixins.fastmc.allocfix.devfix.json"
+            )
+        } else {
+            Mixins.addConfigurations(
+                "mixins.fastmc.allocfix.devfix.json"
+            )
+        }
     }
 
     override fun injectData(data: Map<String, Any>) {

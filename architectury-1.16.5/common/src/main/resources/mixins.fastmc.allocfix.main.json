@@ -1,0 +1,25 @@
+{
+    "required": false,
+    "minVersion": "0.8",
+    "priority": -69420,
+    "mixinPriority": -69420,
+    "compatibilityLevel": "JAVA_8",
+    "package": "dev.fastmc.allocfix.mixins.main",
+    "client": [
+        "MixinDirection",
+        "MixinMinecraftClient",
+        "MixinSimpleVoxelShape",
+        "render.MixinEntityRenderer",
+        "render.MixinFrustum",
+        "render.MixinModelPart",
+        "render.MixinPatchBackgroundRenderer",
+        "render.MixinPatchMatrix3f",
+        "render.MixinPatchMatrix4f",
+        "render.MixinPatchMatrixStack",
+        "render.MixinRenderLayer",
+        "render.MixinWorldRenderer",
+        "world.MixinFlowableFluid",
+        "world.MixinPatchVoronoiBiomeAccessType",
+        "world.MixinServerChunkManager"
+    ]
+}

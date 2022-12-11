@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "fastmc-allocfix",
+  "version": "${version}",
+  "name": "Fast Minecraft Allocation Fix",
+  "description": "Fixing Mojang's massive amount of memory allocation trolling",
+  "authors": [
+    "Luna"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/fastmc/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "dev.fastmc.allocfix.FastMcAllocFixEntryPoint"
+    ]
+  },
+  "mixins": [
+    "mixins.fastmc.allocfix.accessor.json",
+    "mixins.fastmc.allocfix.main.json"
+  ],
+  "accessWidener": "fastmc-allocfix.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.11",
+    "minecraft": "1.16.5"
+  }
+}
