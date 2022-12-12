@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Matrix4f.class)
-public class MixinPatchMatrix4f implements IPatchedMatrix4f {
+public class MixinMatrix4f implements IPatchedMatrix4f {
     @Shadow
     public float a00;
     @Shadow

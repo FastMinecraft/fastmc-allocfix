@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @SuppressWarnings("DuplicatedCode")
 @Mixin(Matrix3f.class)
-public class MixinPatchMatrix3f implements IPatchedMatrix3f {
+public class MixinMatrix3f implements IPatchedMatrix3f {
     @Shadow
     public float a00;
     @Shadow

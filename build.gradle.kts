@@ -62,7 +62,7 @@ subprojects {
             kotlinOptions {
                 freeCompilerArgs += listOf(
                     "-opt-in=kotlin.RequiresOptIn",
-                    "-opt-in=kotlin.contracts.ExperimentalContracts",
+                    "-opt-in=kotlin.contracts.ExperimentalContracts"
                 )
             }
         }

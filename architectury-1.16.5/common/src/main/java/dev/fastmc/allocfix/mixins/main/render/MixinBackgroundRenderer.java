@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(BackgroundRenderer.class)
-public class MixinPatchBackgroundRenderer {
+public class MixinBackgroundRenderer {
     @Shadow
     private static long lastWaterFogColorUpdateTime;
 

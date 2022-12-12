@@ -17,10 +17,10 @@ public class MixinFrustum {
      * @reason Memory allocation optimization
      */
     @Overwrite
-    private void init(Matrix4f matrix4f, Matrix4f matrix4f2) {
-        org.joml.Matrix4f projection = AdaptersKt.toJoml(matrix4f);
-        org.joml.Matrix4f viewModel = AdaptersKt.toJoml(matrix4f2);
-        jomlFrustum.set(projection.mul(viewModel), false);
+    private void init(Matrix4f modelViewIn, Matrix4f projectionIn) {
+        org.joml.Matrix4f projection = AdaptersKt.toJoml(projectionIn);
+        org.joml.Matrix4f modelView = AdaptersKt.toJoml(modelViewIn);
+        jomlFrustum.set(projection.mul(modelView), false);
     }
 
     /**

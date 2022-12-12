@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 import java.util.List;
+import java.util.Objects;
 
 @Mixin(RenderLayer.class)
 public class MixinRenderLayer {
