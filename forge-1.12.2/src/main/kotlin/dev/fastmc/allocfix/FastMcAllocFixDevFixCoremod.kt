@@ -14,11 +14,13 @@ class FastMcAllocFixDevFixCoremod : IFMLLoadingPlugin {
         MixinBootstrap.init()
         if (enableMod) {
             Mixins.addConfigurations(
+                "mixins.fastmc.allocfix.accessor.json",
                 "mixins.fastmc.allocfix.main.json",
                 "mixins.fastmc.allocfix.devfix.json"
             )
         } else {
             Mixins.addConfigurations(
+                "mixins.fastmc.allocfix.accessor.json",
                 "mixins.fastmc.allocfix.devfix.json"
             )
         }

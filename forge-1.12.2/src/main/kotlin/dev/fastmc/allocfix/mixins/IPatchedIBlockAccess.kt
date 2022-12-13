@@ -10,4 +10,8 @@ interface IPatchedIBlockAccess {
     fun getBlockState(x: Int, y: Int, z: Int): IBlockState {
         return thisRef.getBlockState(BlockPos(x, y, z))
     }
+
+    fun getCombinedLight(x: Int, y: Int, z: Int, lightValue: Int): Int {
+        return thisRef.getCombinedLight(BlockPos(x, y, z), lightValue)
+    }
 }

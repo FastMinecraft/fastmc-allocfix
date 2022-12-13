@@ -8,6 +8,7 @@
     "refmap": "mixins.fastmc.allocfix.refmap.json",
     "client": [
         "MixinASMModParser",
+        "MixinChunkRenderDispatcher",
         "MixinJarDiscoverer",
         "MixinNetworkRegistry"
     ]

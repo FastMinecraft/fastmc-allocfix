@@ -29,13 +29,8 @@ public class MixinWorldGenMinable {
     @Final
     private IBlockState oreBlock;
 
-    /**
-     * @author Luna
-     * @reason Memory allocation optimization
-     */
-    @Overwrite
+
     public boolean generate(World worldIn, Random rand, BlockPos position) {
-        IPatchedIBlockAccess blockAccess = (IPatchedIBlockAccess) worldIn;
 
         float f = rand.nextFloat() * (float) Math.PI;
         double d0 = (float) (position.getX() + 8) + MathHelper.sin(f) * (float) this.numberOfBlocks / 8.0F;

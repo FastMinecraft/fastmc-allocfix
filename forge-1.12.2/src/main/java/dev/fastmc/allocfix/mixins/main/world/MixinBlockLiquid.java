@@ -53,4 +53,21 @@ public class MixinBlockLiquid extends Block {
 
         return side == EnumFacing.UP || super.shouldSideBeRendered(blockState, blockAccess, pos, side);
     }
+
+    /**
+     * @author Luna
+     * @reason Memory allocation optimization
+     */
+    @SuppressWarnings("deprecation")
+    @SideOnly(Side.CLIENT)
+    @Overwrite
+    public int getPackedLightmapCoords(@NotNull IBlockState state, IBlockAccess source, @NotNull BlockPos pos) {
+        int lightThis = source.getCombinedLight(pos, 0);
+        int lightUp = ((IPatchedIBlockAccess) source).getCombinedLight(pos.getX(), pos.getY() + 1, pos.getZ(), 0);
+        int blockLightThis = lightThis & 255;
+        int blockLightUp = lightUp & 255;
+        int skyLightThis = lightThis >> 16 & 255;
+        int skyLightUp = lightUp >> 16 & 255;
+        return Math.max(blockLightThis, blockLightUp) | Math.max(skyLightThis, skyLightUp) << 16;
+    }
 }

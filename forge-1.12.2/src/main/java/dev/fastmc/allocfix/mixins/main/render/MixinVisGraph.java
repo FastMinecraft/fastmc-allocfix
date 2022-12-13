@@ -31,7 +31,7 @@ public abstract class MixinVisGraph {
     @Overwrite
     private Set<EnumFacing> floodFill(int pos) {
         Set<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
-        IntArrayFIFOQueue queue = new IntArrayFIFOQueue();
+        IntArrayFIFOQueue queue = new IntArrayFIFOQueue(300);
         queue.enqueue(pos);
 
         this.bitSet.set(pos, true);

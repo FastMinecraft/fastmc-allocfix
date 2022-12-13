@@ -75,13 +75,18 @@ public abstract class MixinWorld implements IPatchedWorld, IPatchedIBlockAccess 
     @Shadow
     public abstract Chunk getChunk(BlockPos par1);
 
-    @Shadow @Final public boolean isRemote;
+    @Shadow
+    @Final
+    public boolean isRemote;
 
-    @Shadow protected WorldInfo worldInfo;
+    @Shadow
+    protected WorldInfo worldInfo;
 
-    @Shadow(remap = false) public boolean captureBlockSnapshots;
+    @Shadow(remap = false)
+    public boolean captureBlockSnapshots;
 
-    @Shadow(remap = false) public ArrayList<BlockSnapshot> capturedBlockSnapshots;
+    @Shadow(remap = false)
+    public ArrayList<BlockSnapshot> capturedBlockSnapshots;
 
     /**
      * @author Luna
@@ -402,5 +407,17 @@ public abstract class MixinWorld implements IPatchedWorld, IPatchedIBlockAccess 
             Chunk chunk = this.getChunk(x >> 4, z >> 4);
             return chunk.getBlockState(x, y, z);
         }
+    }
+
+    @Override
+    public int getCombinedLight(int x, int y, int z, int lightValue) {
+        int skyLight = this.getLightFromNeighborsFor(EnumSkyBlock.SKY, x, y, z);
+        int blockLight = this.getLightFromNeighborsFor(EnumSkyBlock.BLOCK, x, y, z);
+
+        if (blockLight < lightValue) {
+            blockLight = lightValue;
+        }
+
+        return skyLight << 20 | blockLight << 4;
     }
 }

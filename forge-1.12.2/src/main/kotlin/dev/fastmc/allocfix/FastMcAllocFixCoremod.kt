@@ -11,6 +11,7 @@ class FastMcAllocFixCoremod : IFMLLoadingPlugin {
     init {
         MixinBootstrap.init()
         Mixins.addConfigurations(
+            "mixins.fastmc.allocfix.accessor.json",
             "mixins.fastmc.allocfix.main.json",
         )
     }

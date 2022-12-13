@@ -10,9 +10,15 @@
         "MixinEnumFacing",
         "MixinTextFormatting",
         "entity.MixinEntityDataManager",
+        "render.MixinBlockFluidRenderer",
         "render.MixinBlockInfo",
         "render.MixinBlockRenderLayer",
+        "render.MixinBufferBuilder",
+        "render.MixinForgeBlockModelRenderer",
         "render.MixinRenderGlobal",
+        "render.MixinRenderGlobalPlanA",
+        "render.MixinRenderGlobalPlanB",
+        "render.MixinVertexBufferConsumer",
         "render.MixinVisGraph",
         "world.MixinBiome",
         "world.MixinBiomeColorHelper",
@@ -20,8 +26,15 @@
         "world.MixinBlockLiquid",
         "world.MixinChunk",
         "world.MixinChunkCache",
+        "world.MixinIBlockAccess",
         "world.MixinWorld",
+        "world.MixinWorldClient",
         "world.MixinWorldGenMinable",
-        "world.MixinWorldServer"
+        "world.MixinWorldServer",
+        "MixinClassInheritanceMultiMap",
+        "render.MixinIPatchedIVertexConsumer",
+        "render.MixinLightUtil",
+        "render.MixinIVertexConsumerImpl",
+        "world.MixinBlockSnow"
     ]
 }

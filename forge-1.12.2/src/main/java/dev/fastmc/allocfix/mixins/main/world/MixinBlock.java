@@ -22,10 +22,10 @@ public class MixinBlock {
      */
     @Overwrite
     protected static void addCollisionBoxToList(
-            BlockPos pos,
-            AxisAlignedBB entityBox,
-            List<AxisAlignedBB> collidingBoxes,
-            AxisAlignedBB blockBox
+        BlockPos pos,
+        AxisAlignedBB entityBox,
+        List<AxisAlignedBB> collidingBoxes,
+        AxisAlignedBB blockBox
     ) {
         if (blockBox != null) {
             double minX = blockBox.minX + pos.getX();
@@ -76,14 +76,10 @@ public class MixinBlock {
                 if (box.maxX < 1.0D) return true;
         }
 
-        if (blockAccess instanceof IPatchedIBlockAccess) {
-            return !((IPatchedIBlockAccess) blockAccess).getBlockState(
-                pos.getX() + side.getXOffset(),
-                pos.getY() + side.getYOffset(),
-                pos.getZ() + side.getZOffset()
-            ).isOpaqueCube();
-        } else {
-            return blockAccess.getBlockState(pos.offset(side)).isOpaqueCube();
-        }
+        return !((IPatchedIBlockAccess) blockAccess).getBlockState(
+            pos.getX() + side.getXOffset(),
+            pos.getY() + side.getYOffset(),
+            pos.getZ() + side.getZOffset()
+        ).isOpaqueCube();
     }
 }

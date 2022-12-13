@@ -1,0 +1,13 @@
+{
+    "required": true,
+    "minVersion": "0.7",
+    "priority": -69420,
+    "mixinPriority": -69420,
+    "compatibilityLevel": "JAVA_8",
+    "package": "dev.fastmc.allocfix.mixins.accessor",
+    "refmap": "mixins.fastmc.allocfix.refmap.json",
+    "client": [
+        "AccessorChunkRenderWorker",
+        "AccessorPendingUpload"
+    ]
+}
