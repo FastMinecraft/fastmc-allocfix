@@ -9,6 +9,7 @@
     "client": [
         "MixinClassInheritanceMultiMap",
         "MixinEnumFacing",
+        "MixinMinecraft",
         "MixinTextFormatting",
         "entity.MixinEntityDataManager",
         "render.MixinBlockFluidRenderer",
@@ -16,6 +17,7 @@
         "render.MixinBlockRenderLayer",
         "render.MixinBufferBuilder",
         "render.MixinForgeBlockModelRenderer",
+        "render.MixinGuiOverlayDebug",
         "render.MixinIPatchedIVertexConsumer",
         "render.MixinIVertexConsumerImpl",
         "render.MixinLightUtil",
