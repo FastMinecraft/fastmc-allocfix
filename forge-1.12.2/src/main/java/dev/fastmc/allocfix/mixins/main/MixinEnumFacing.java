@@ -1,20 +1,28 @@
 package dev.fastmc.allocfix.mixins.main;
 
 import net.minecraft.util.EnumFacing;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EnumFacing.class)
 public class MixinEnumFacing {
 
+    @Shadow @Final private int index;
     private static EnumFacing[] valuesOverride;
 
-    @Redirect(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/EnumFacing;values()[Lnet/minecraft/util/EnumFacing;"))
-    private static EnumFacing[] clinit$Redirect$INVOKE$values() {
-        valuesOverride = new EnumFacing[]{ EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.EAST };
-        return valuesOverride;
+    @SuppressWarnings("DataFlowIssue")
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void Inject$init$HEAD(CallbackInfo ci) {
+        if (valuesOverride == null) {
+            valuesOverride = new EnumFacing[6];
+        }
+        valuesOverride[this.index] = (EnumFacing) (Object) this;
     }
 
     /**

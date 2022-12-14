@@ -6,7 +6,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Direction.class)
 public class MixinDirection {
@@ -14,12 +15,20 @@ public class MixinDirection {
     @Shadow
     @Final
     private int idOpposite;
+
+    @Shadow
+    @Final
+    private int id;
+
     private static Direction[] valuesOverride;
 
-    @Redirect(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Direction;values()[Lnet/minecraft/util/math/Direction;"))
-    private static Direction[] clinit$Redirect$INVOKE$values() {
-        valuesOverride = new Direction[]{ Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST };
-        return valuesOverride;
+    @SuppressWarnings("DataFlowIssue")
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void Inject$init$HEAD(CallbackInfo ci) {
+        if (valuesOverride == null) {
+            valuesOverride = new Direction[6];
+        }
+        valuesOverride[this.id] = (Direction) (Object) this;
     }
 
     /**
