@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.RenderGlobal.ContainerLocalRenderInformatio
 import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -79,6 +80,34 @@ public class MixinRenderGlobal implements IPatchedRenderGlobal {
                 cachedRenderInfos.remove(i);
             }
         }
+    }
+
+    private final BlockPos.MutableBlockPos cachedPos1 = new BlockPos.MutableBlockPos();
+
+    @Redirect(method = "setupTerrain", at = @At(value = "NEW", target = "net/minecraft/util/math/BlockPos", ordinal = 0))
+    private BlockPos Redirect$setupTerrain$NEW$BlockPos$0(double x, double y, double z) {
+        return cachedPos1.setPos(x, y, z);
+    }
+
+    private final BlockPos.MutableBlockPos cachedPos2 = new BlockPos.MutableBlockPos();
+
+    @Redirect(method = "setupTerrain", at = @At(value = "NEW", target = "net/minecraft/util/math/BlockPos", ordinal = 1))
+    private BlockPos Redirect$setupTerrain$NEW$BlockPos$1(int x, int y, int z) {
+        return cachedPos2.setPos(x, y, z);
+    }
+
+    private final BlockPos.MutableBlockPos cachedPos3 = new BlockPos.MutableBlockPos();
+
+    @Redirect(method = "setupTerrain", at = @At(value = "NEW", target = "net/minecraft/util/math/BlockPos", ordinal = 2))
+    private BlockPos Redirect$setupTerrain$NEW$BlockPos$2(int x, int y, int z) {
+        return cachedPos3.setPos(x, y, z);
+    }
+
+    private final BlockPos.MutableBlockPos cachedPos4 = new BlockPos.MutableBlockPos();
+
+    @Redirect(method = "setupTerrain", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/BlockPos;add(III)Lnet/minecraft/util/math/BlockPos;", ordinal = 0))
+    private BlockPos Redirect$setupTerrain$INVOKE$BlockPos$add(BlockPos pos, int x, int y, int z) {
+        return cachedPos4.setPos(pos.getX() + x, pos.getY() + y, pos.getZ() + z);
     }
 
     @NotNull

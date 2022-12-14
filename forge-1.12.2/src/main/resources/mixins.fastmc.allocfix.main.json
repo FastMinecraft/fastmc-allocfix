@@ -7,6 +7,7 @@
     "package": "dev.fastmc.allocfix.mixins.main",
     "refmap": "mixins.fastmc.allocfix.refmap.json",
     "client": [
+        "MixinClassInheritanceMultiMap",
         "MixinEnumFacing",
         "MixinTextFormatting",
         "entity.MixinEntityDataManager",
@@ -15,6 +16,9 @@
         "render.MixinBlockRenderLayer",
         "render.MixinBufferBuilder",
         "render.MixinForgeBlockModelRenderer",
+        "render.MixinIPatchedIVertexConsumer",
+        "render.MixinIVertexConsumerImpl",
+        "render.MixinLightUtil",
         "render.MixinRenderGlobal",
         "render.MixinRenderGlobalPlanA",
         "render.MixinRenderGlobalPlanB",
@@ -24,17 +28,13 @@
         "world.MixinBiomeColorHelper",
         "world.MixinBlock",
         "world.MixinBlockLiquid",
+        "world.MixinBlockSnow",
         "world.MixinChunk",
         "world.MixinChunkCache",
         "world.MixinIBlockAccess",
         "world.MixinWorld",
         "world.MixinWorldClient",
         "world.MixinWorldGenMinable",
-        "world.MixinWorldServer",
-        "MixinClassInheritanceMultiMap",
-        "render.MixinIPatchedIVertexConsumer",
-        "render.MixinLightUtil",
-        "render.MixinIVertexConsumerImpl",
-        "world.MixinBlockSnow"
+        "world.MixinWorldServer"
     ]
 }

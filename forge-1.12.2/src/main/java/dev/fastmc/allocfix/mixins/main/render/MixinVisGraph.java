@@ -1,6 +1,6 @@
 package dev.fastmc.allocfix.mixins.main.render;
 
-import it.unimi.dsi.fastutil.ints.IntArrayFIFOQueue;
+import dev.fastmc.common.collection.IntArrayFIFOQueueNoShrink;
 import net.minecraft.client.renderer.chunk.VisGraph;
 import net.minecraft.util.EnumFacing;
 import org.spongepowered.asm.mixin.Final;
@@ -24,6 +24,8 @@ public abstract class MixinVisGraph {
     @Shadow
     protected abstract int getNeighborIndexAtFace(int pos, EnumFacing facing);
 
+    private static final EnumFacing[] FACINGS = EnumFacing.values();
+
     /**
      * @author Luna
      * @reason Memory allocation optimization
@@ -31,7 +33,7 @@ public abstract class MixinVisGraph {
     @Overwrite
     private Set<EnumFacing> floodFill(int pos) {
         Set<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
-        IntArrayFIFOQueue queue = new IntArrayFIFOQueue(300);
+        IntArrayFIFOQueueNoShrink queue = new IntArrayFIFOQueueNoShrink(300);
         queue.enqueue(pos);
 
         this.bitSet.set(pos, true);
@@ -40,7 +42,7 @@ public abstract class MixinVisGraph {
             int i = queue.dequeueInt();
             this.addEdges(i, set);
 
-            for (EnumFacing enumfacing : EnumFacing.values()) {
+            for (EnumFacing enumfacing : FACINGS) {
                 int j = this.getNeighborIndexAtFace(i, enumfacing);
 
                 if (j >= 0 && !this.bitSet.get(j)) {
