@@ -4,7 +4,7 @@ forgeProject {
     accessTransformer = "fastmc-allocfix-at.cfg"
     mixinConfig("mixins.fastmc.allocfix.accessor.json", "mixins.fastmc.allocfix.main.json")
     coreModClass.set("dev.fastmc.allocfix.FastMcAllocFixCoremod")
-    coreModClass.set("dev.fastmc.allocfix.FastMcAllocFixDevFixCoremod")
+    devCoreModClass.set("dev.fastmc.allocfix.FastMcAllocFixDevFixCoremod")
 }
 
 configure<MixinExtension> {
