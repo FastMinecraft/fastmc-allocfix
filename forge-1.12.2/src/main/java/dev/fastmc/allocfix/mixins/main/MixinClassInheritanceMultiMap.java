@@ -1,6 +1,6 @@
 package dev.fastmc.allocfix.mixins.main;
 
-import dev.fastmc.allocfix.mixins.DummyLinkedHashMap;
+import dev.fastmc.allocfix.DummyLinkedHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.util.ClassInheritanceMultiMap;

@@ -1,4 +1,4 @@
-package dev.fastmc.allocfix.mixins;
+package dev.fastmc.allocfix;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;

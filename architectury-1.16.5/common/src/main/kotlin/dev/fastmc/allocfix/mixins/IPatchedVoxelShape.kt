@@ -3,6 +3,10 @@ package dev.fastmc.allocfix.mixins
 import net.minecraft.util.shape.FractionalDoubleList
 
 interface IPatchedVoxelShape {
+    fun hash(): Int {
+        return this.hashCode()
+    }
+
     companion object {
         private val cache = arrayOfNulls<FractionalDoubleList>(1024)
 

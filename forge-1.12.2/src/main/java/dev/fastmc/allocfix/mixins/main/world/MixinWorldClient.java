@@ -1,6 +1,6 @@
 package dev.fastmc.allocfix.mixins.main.world;
 
-import dev.fastmc.allocfix.mixins.DummyLinkedHashSet;
+import dev.fastmc.allocfix.DummyLinkedHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import net.minecraft.client.multiplayer.WorldClient;
 import org.spongepowered.asm.mixin.Mixin;

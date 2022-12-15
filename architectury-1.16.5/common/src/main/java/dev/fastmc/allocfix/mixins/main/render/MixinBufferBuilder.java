@@ -1,8 +1,8 @@
 package dev.fastmc.allocfix.mixins.main.render;
 
 import dev.fastmc.allocfix.QuadSort;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.VertexFormat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,54 +16,58 @@ import java.nio.FloatBuffer;
 
 @Mixin(BufferBuilder.class)
 public abstract class MixinBufferBuilder {
-    @Shadow private ByteBuffer byteBuffer;
-    @Shadow private VertexFormat vertexFormat;
-    @Shadow private double xOffset;
-    @Shadow private double yOffset;
-    @Shadow private double zOffset;
-    @Shadow private int vertexCount;
+    @Shadow
+    private int buildStart;
+    @Shadow
+    private ByteBuffer buffer;
+    @Shadow
+    private VertexFormat format;
+    @Shadow
+    private int vertexCount;
+
     private QuadSort quadSort;
     private ByteBuffer temp;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void Inject$init$RETURN(int initialCapacity, CallbackInfo ci) {
-        temp = byteBuffer.duplicate();
+        temp = buffer.duplicate();
         temp.order(ByteOrder.nativeOrder());
     }
 
 
-    @Inject(method = "growBuffer", at = @At("RETURN"))
+    @Inject(method = "grow(I)V", at = @At("RETURN"))
     private void Inject$grow$RETURN(int initialCapacity, CallbackInfo ci) {
-        temp = byteBuffer.duplicate();
+        temp = buffer.duplicate();
         temp.order(ByteOrder.nativeOrder());
     }
+
 
     /**
      * @author Luna
      * @reason Memory allocation optimization
      */
     @Overwrite
-    public void sortVertexData(float cameraX, float cameraY, float cameraZ) {
+    public void sortQuads(float cameraX, float cameraY, float cameraZ) {
         if (quadSort == null) {
             quadSort = new QuadSort();
         }
 
-        int prevPos = byteBuffer.position();
-        int prevLimit = byteBuffer.limit();
+        int prevPos = buffer.position();
+        int prevLimit = buffer.limit();
 
-        VertexFormat format = vertexFormat;
+        VertexFormat format = this.format;
         quadSort.sortQuads(
-            byteBuffer,
+            buffer,
             temp,
-            0,
-            (float) (cameraX + xOffset),
-            (float) (cameraY + yOffset),
-            (float) (cameraZ + zOffset),
+            buildStart,
+            cameraX,
+            cameraY,
+            cameraZ,
             vertexCount,
-            format.getSize()
+            format.getVertexSize()
         );
 
-        byteBuffer.position(prevPos);
-        byteBuffer.limit(prevLimit);
+        buffer.position(prevPos);
+        buffer.limit(prevLimit);
     }
 }

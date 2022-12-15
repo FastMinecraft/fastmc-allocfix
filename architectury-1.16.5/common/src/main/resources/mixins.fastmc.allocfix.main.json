@@ -7,12 +7,16 @@
     "compatibilityLevel": "JAVA_8",
     "package": "dev.fastmc.allocfix.mixins.main",
     "client": [
+        "MixinArrayVoxelShape",
         "MixinDirection",
         "MixinMinecraftClient",
         "MixinSimpleVoxelShape",
+        "MixinSlicedVoxelShape",
+        "MixinVoxelShape",
         "entity.MixinGoalSelector",
         "render.MixinBackgroundRenderer",
         "render.MixinBlockModelRenderer",
+        "render.MixinBufferBuilder",
         "render.MixinChunkRendererRegion",
         "render.MixinDebugHud",
         "render.MixinEntityRenderer",
@@ -31,8 +35,15 @@
         "render.hashfix.MixinRenderPhaseLineWidth",
         "render.hashfix.MixinRenderPhaseOffsetTexturing",
         "render.hashfix.MixinRenderPhaseWriteMaskState",
+        "world.MixinBlock",
+        "world.MixinBlockView",
+        "world.MixinChunkRendererRegion",
+        "world.MixinEmptyChunk",
         "world.MixinFlowableFluid",
         "world.MixinPatchVoronoiBiomeAccessType",
-        "world.MixinServerChunkManager"
+        "world.MixinServerChunkManager",
+        "world.MixinWorld",
+        "world.MixinWorldChunk",
+        "world.MixinThreadedAnvilChunkStorage"
     ]
 }

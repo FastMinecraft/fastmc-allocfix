@@ -9,6 +9,7 @@ accessible class net/minecraft/client/render/WorldRenderer$ChunkInfo
 accessible class net/minecraft/client/render/RenderLayer$MultiPhase
 accessible class net/minecraft/client/render/block/BlockModelRenderer$AmbientOcclusionCalculator
 accessible class net/minecraft/client/render/RenderLayer$OutlineMode
+accessible class net/minecraft/server/world/ThreadedAnvilChunkStorage$TicketManager
 
 
 accessible method net/minecraft/client/util/math/MatrixStack$Entry <init> (Lnet/minecraft/util/math/Matrix4f;Lnet/minecraft/util/math/Matrix3f;)V

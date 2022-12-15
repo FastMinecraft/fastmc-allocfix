@@ -1,6 +1,6 @@
 package dev.fastmc.allocfix.mixins.main.render;
 
-import dev.fastmc.allocfix.mixins.DummyLinkedHashSet;
+import dev.fastmc.allocfix.DummyLinkedHashSet;
 import dev.fastmc.allocfix.mixins.IPatchedRenderGlobal;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import net.minecraft.client.renderer.RenderGlobal;
