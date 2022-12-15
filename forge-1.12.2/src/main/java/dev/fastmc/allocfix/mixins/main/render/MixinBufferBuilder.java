@@ -3,6 +3,7 @@ package dev.fastmc.allocfix.mixins.main.render;
 import dev.fastmc.allocfix.QuadSort;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,16 +13,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 
 @Mixin(BufferBuilder.class)
 public abstract class MixinBufferBuilder {
-    @Shadow private ByteBuffer byteBuffer;
-    @Shadow private VertexFormat vertexFormat;
-    @Shadow private double xOffset;
-    @Shadow private double yOffset;
-    @Shadow private double zOffset;
-    @Shadow private int vertexCount;
+    @Shadow
+    private ByteBuffer byteBuffer;
+    @Shadow
+    private VertexFormat vertexFormat;
+    @Shadow
+    private double xOffset;
+    @Shadow
+    private double yOffset;
+    @Shadow
+    private double zOffset;
+    @Shadow
+    private int vertexCount;
     private QuadSort quadSort;
     private ByteBuffer temp;
 
@@ -32,8 +38,8 @@ public abstract class MixinBufferBuilder {
     }
 
 
-    @Inject(method = "growBuffer", at = @At("RETURN"))
-    private void Inject$grow$RETURN(int initialCapacity, CallbackInfo ci) {
+    @Inject(method = "growBuffer", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/BufferBuilder;byteBuffer:Ljava/nio/ByteBuffer;", shift = At.Shift.AFTER))
+    private void Inject$grow$FIELD$PUTFIELD$byteBuffer(int initialCapacity, CallbackInfo ci) {
         temp = byteBuffer.duplicate();
         temp.order(ByteOrder.nativeOrder());
     }

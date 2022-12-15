@@ -3,6 +3,7 @@ package dev.fastmc.allocfix.mixins.main.render;
 import dev.fastmc.allocfix.QuadSort;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.VertexFormat;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,13 +35,11 @@ public abstract class MixinBufferBuilder {
         temp.order(ByteOrder.nativeOrder());
     }
 
-
-    @Inject(method = "grow(I)V", at = @At("RETURN"))
+    @Inject(method = "grow(I)V", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/render/BufferBuilder;buffer:Ljava/nio/ByteBuffer;", shift = At.Shift.AFTER))
     private void Inject$grow$RETURN(int initialCapacity, CallbackInfo ci) {
         temp = buffer.duplicate();
         temp.order(ByteOrder.nativeOrder());
     }
-
 
     /**
      * @author Luna
