@@ -1,9 +1,7 @@
 package dev.fastmc.allocfix
 
 
-import dev.fastmc.allocfix.mixins.IPatchedBlockView
-import dev.fastmc.allocfix.mixins.IPatchedVoxelShape
-import dev.fastmc.allocfix.mixins.accessor.AccessorVoxelShape
+import dev.fastmc.allocfix.accessor.AccessorVoxelShape
 import dev.fastmc.common.BYTE_FALSE
 import dev.fastmc.common.BYTE_TRUE
 import dev.fastmc.common.BYTE_UNCHECKED

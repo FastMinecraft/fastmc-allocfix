@@ -2,11 +2,9 @@
     "required": true,
     "minVersion": "0.8",
     "compatibilityLevel": "JAVA_8",
-    "package": "dev.fastmc.allocfix.mixins.accessor",
+    "package": "dev.fastmc.allocfix.accessor",
     "client": [
-        "AccessorThreadedAnvilChunkStorage"
-    ],
-    "mixins": [
+        "AccessorThreadedAnvilChunkStorage",
         "AccessorFrustum",
         "AccessorPlayerChunkWatchingManager",
         "AccessorVoxelShape"

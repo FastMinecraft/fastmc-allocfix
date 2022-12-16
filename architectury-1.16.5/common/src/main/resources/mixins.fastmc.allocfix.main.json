@@ -5,7 +5,7 @@
     "mixinPriority": -69420,
     "verbose": true,
     "compatibilityLevel": "JAVA_8",
-    "package": "dev.fastmc.allocfix.mixins.main",
+    "package": "dev.fastmc.allocfix.main",
     "client": [
         "MixinArrayVoxelShape",
         "MixinDirection",
@@ -14,20 +14,14 @@
         "MixinSlicedVoxelShape",
         "MixinVoxelShape",
         "entity.MixinGoalSelector",
-        "render.MixinAmbientOcclusionCalculator",
         "render.MixinBackgroundRenderer",
-        "render.MixinBlockModelRenderer",
         "render.MixinBufferBuilder",
-        "render.MixinChunkRendererRegion",
         "render.MixinDebugHud",
         "render.MixinEntityRenderer",
-        "render.MixinFluidRenderer",
+        "render.MixinFontStorage",
         "render.MixinFrustum",
         "render.MixinImmediate",
-        "render.MixinMatrix3f",
-        "render.MixinMatrix4f",
         "render.MixinModelPart",
-        "render.MixinMatrixStack",
         "render.MixinRenderLayer",
         "render.MixinVertexBuffer",
         "render.MixinVertexConsumer",
@@ -38,6 +32,13 @@
         "render.hashfix.MixinRenderPhaseLineWidth",
         "render.hashfix.MixinRenderPhaseOffsetTexturing",
         "render.hashfix.MixinRenderPhaseWriteMaskState",
+        "render.matrix.MixinMatrix3f",
+        "render.matrix.MixinMatrix4f",
+        "render.matrix.MixinMatrixStack",
+        "render.terrain.MixinAmbientOcclusionCalculator",
+        "render.terrain.MixinBlockModelRenderer",
+        "render.terrain.MixinChunkRendererRegion",
+        "render.terrain.MixinFluidRenderer",
         "world.MixinBlock",
         "world.MixinBlockView",
         "world.MixinChunkRendererRegion",
@@ -49,8 +50,5 @@
         "world.MixinThreadedAnvilChunkStorage",
         "world.MixinWorld",
         "world.MixinWorldChunk"
-    ],
-    "mixins": [
-        "render.MixinFontStorage"
     ]
 }

@@ -1,8 +1,31 @@
+/*
+ * Adapted from org.joml.Matrix4f
+ *
+ * The MIT() License
+ *
+ * Copyright (c) 2015-2021 Richard Greenlees
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, mod()ify, mer()ge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MER()CHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package dev.fastmc.allocfix;
 
 import org.joml.Math;
-import org.joml.Matrix4f;
-import org.joml.Quaternionfc;
 
 public interface IMatrix4f {
     float m00();
@@ -101,14 +124,17 @@ public interface IMatrix4f {
         float nm01 = Math.fma(m01(), right.m00(), Math.fma(m11(), right.m01(), Math.fma(m21(), right.m02(), m31() * right.m03())));
         float nm02 = Math.fma(m02(), right.m00(), Math.fma(m12(), right.m01(), Math.fma(m22(), right.m02(), m32() * right.m03())));
         float nm03 = Math.fma(m03(), right.m00(), Math.fma(m13(), right.m01(), Math.fma(m23(), right.m02(), m33() * right.m03())));
+
         float nm10 = Math.fma(m00(), right.m10(), Math.fma(m10(), right.m11(), Math.fma(m20(), right.m12(), m30() * right.m13())));
         float nm11 = Math.fma(m01(), right.m10(), Math.fma(m11(), right.m11(), Math.fma(m21(), right.m12(), m31() * right.m13())));
         float nm12 = Math.fma(m02(), right.m10(), Math.fma(m12(), right.m11(), Math.fma(m22(), right.m12(), m32() * right.m13())));
         float nm13 = Math.fma(m03(), right.m10(), Math.fma(m13(), right.m11(), Math.fma(m23(), right.m12(), m33() * right.m13())));
+
         float nm20 = Math.fma(m00(), right.m20(), Math.fma(m10(), right.m21(), Math.fma(m20(), right.m22(), m30() * right.m23())));
         float nm21 = Math.fma(m01(), right.m20(), Math.fma(m11(), right.m21(), Math.fma(m21(), right.m22(), m31() * right.m23())));
         float nm22 = Math.fma(m02(), right.m20(), Math.fma(m12(), right.m21(), Math.fma(m22(), right.m22(), m32() * right.m23())));
         float nm23 = Math.fma(m03(), right.m20(), Math.fma(m13(), right.m21(), Math.fma(m23(), right.m22(), m33() * right.m23())));
+
         float nm30 = Math.fma(m00(), right.m30(), Math.fma(m10(), right.m31(), Math.fma(m20(), right.m32(), m30() * right.m33())));
         float nm31 = Math.fma(m01(), right.m30(), Math.fma(m11(), right.m31(), Math.fma(m21(), right.m32(), m31() * right.m33())));
         float nm32 = Math.fma(m02(), right.m30(), Math.fma(m12(), right.m31(), Math.fma(m22(), right.m32(), m32() * right.m33())));
