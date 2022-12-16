@@ -8,11 +8,17 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(BlockModelRenderer.AmbientOcclusionCalculator.class)
 public class MixinAmbientOcclusionCalculator {
-    private final BlockPos.Mutable mutable = new BlockPos.Mutable();
+    private final BlockPos.Mutable mutable1 = new BlockPos.Mutable();
+    private final BlockPos.Mutable mutable2 = new BlockPos.Mutable();
 
     @SuppressWarnings({ "MixinAnnotationTarget", "InvalidInjectorMethodSignature", "UnresolvedMixinReference" })
     @Redirect(method = "apply", at = @At(value = "NEW", target = "net/minecraft/util/math/BlockPos$Mutable"))
     private BlockPos.Mutable Redirect$apply$NEWBlockPos$Mutable() {
-        return mutable;
+        return mutable1;
+    }
+
+    @Redirect(method = "apply", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/BlockPos;offset(Lnet/minecraft/util/math/Direction;)Lnet/minecraft/util/math/BlockPos;"))
+    private BlockPos Redirect$apply$INVOKE$offset(BlockPos pos, net.minecraft.util.math.Direction direction) {
+        return mutable2.set(pos, direction);
     }
 }

@@ -1,5 +1,7 @@
 package dev.fastmc.allocfix.main.entity;
 
+import dev.fastmc.allocfix.DummyLinkedHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
@@ -8,8 +10,11 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.EnumSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -35,6 +40,11 @@ public class MixinGoalSelector {
     @Shadow
     @Final
     private EnumSet<Goal.Control> disabledControls;
+
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Sets;newLinkedHashSet()Ljava/util/LinkedHashSet;", remap = false))
+    private LinkedHashSet<?> Redirect$init$INVOKE$Sets$newLinkedHashSet() {
+        return new DummyLinkedHashSet<>(new ObjectLinkedOpenHashSet<>());
+    }
 
     /**
      * @author Luna

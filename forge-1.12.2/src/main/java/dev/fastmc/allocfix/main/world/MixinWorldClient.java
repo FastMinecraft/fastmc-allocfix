@@ -1,7 +1,7 @@
 package dev.fastmc.allocfix.main.world;
 
 import dev.fastmc.allocfix.DummyLinkedHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.client.multiplayer.WorldClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,6 +13,6 @@ import java.util.HashSet;
 public class MixinWorldClient {
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Sets;newHashSet()Ljava/util/HashSet;", remap = false), expect = 4)
     private HashSet<?> Redirect$init$INVOKE$Sets$newHashSet() {
-        return new DummyLinkedHashSet<>(new ObjectLinkedOpenHashSet<>());
+        return new DummyLinkedHashSet<>(new ObjectOpenHashSet<>());
     }
 }
