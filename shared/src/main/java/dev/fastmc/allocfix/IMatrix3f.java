@@ -208,4 +208,99 @@ public interface IMatrix3f {
             .m11(nm11)
             .m12(nm12);
     }
+    
+    default IMatrix3f rotateX(float ang) {
+        return rotateX(ang, this);
+    }
+
+    default IMatrix3f rotateX(float ang, IMatrix3f dest) {
+        float sin, cos;
+        sin = Math.sin(ang);
+        cos = Math.cosFromSin(sin, ang);
+
+        float rm11 = cos;
+        float rm21 = -sin;
+        float rm12 = sin;
+        float rm22 = cos;
+
+        // add temporaries for dependent values
+        float nm10 = m10() * rm11 + m20() * rm12;
+        float nm11 = m11() * rm11 + m21() * rm12;
+        float nm12 = m12() * rm11 + m22() * rm12;
+        // set non-dependent values directly
+        return dest.m20(m10() * rm21 + m20() * rm22)
+            .m21(m11() * rm21 + m21() * rm22)
+            .m22(m12() * rm21 + m22() * rm22)
+            // set other values
+            .m10(nm10)
+            .m11(nm11)
+            .m12(nm12)
+            .m00(m00())
+            .m01(m01())
+            .m02(m02());
+    }
+
+    default IMatrix3f rotateY(float ang) {
+        return rotateY(ang, this);
+    }
+
+    default IMatrix3f rotateY(float ang, IMatrix3f dest) {
+        float sin, cos;
+        sin = Math.sin(ang);
+        cos = Math.cosFromSin(sin, ang);
+
+        float rm00 = cos;
+        float rm20 = sin;
+        float rm02 = -sin;
+        float rm22 = cos;
+
+        // add temporaries for dependent values
+        float nm00 = m00() * rm00 + m20() * rm02;
+        float nm01 = m01() * rm00 + m21() * rm02;
+        float nm02 = m02() * rm00 + m22() * rm02;
+
+        // set non-dependent values directly
+        return m20(m00() * rm20 + m20() * rm22)
+            .m21(m01() * rm20 + m21() * rm22)
+            .m22(m02() * rm20 + m22() * rm22)
+            // set other values
+            .m00(nm00)
+            .m01(nm01)
+            .m02(nm02)
+            .m10(m10())
+            .m11(m11())
+            .m12(m12());
+    }
+
+    default IMatrix3f rotateZ(float ang) {
+        return rotateZ(ang, this);
+    }
+
+    default IMatrix3f rotateZ(float ang, IMatrix3f dest) {
+        float sin, cos;
+        sin = Math.sin(ang);
+        cos = Math.cosFromSin(sin, ang);
+
+        float rm00 = cos;
+        float rm10 = -sin;
+        float rm01 = sin;
+        float rm11 = cos;
+
+        // add temporaries for dependent values
+        float nm00 = m00() * rm00 + m10() * rm01;
+        float nm01 = m01() * rm00 + m11() * rm01;
+        float nm02 = m02() * rm00 + m12() * rm01;
+
+        // set non-dependent values directly
+        return dest.m10(m00() * rm10 + m10() * rm11)
+            .m11(m01() * rm10 + m11() * rm11)
+            .m12(m02() * rm10 + m12() * rm11)
+            // set other values
+            .m00(nm00)
+            .m01(nm01)
+            .m02(nm02)
+            .m20(m20())
+            .m21(m21())
+            .m22(m22());
+    }
 }

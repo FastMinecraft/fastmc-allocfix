@@ -243,6 +243,10 @@ public interface IMatrix4f {
         return rotateXYZ(ang, x, y, z, dest);
     }
 
+    default IMatrix4f rotateX(float ang) {
+        return rotateX(ang, this);
+    }
+
     default IMatrix4f rotateX(float ang, IMatrix4f dest) {
         float sin = Math.sin(ang), cos = Math.cosFromSin(sin, ang);
         float lm10 = m10(), lm11 = m11(), lm12 = m12(), lm13 = m13(), lm20 = m20(), lm21 = m21(), lm22 = m22(), lm23 = m23();
@@ -264,6 +268,10 @@ public interface IMatrix4f {
             .m31(m31())
             .m32(m32())
             .m33(m33());
+    }
+
+    default IMatrix4f rotateY(float ang) {
+        return rotateY(ang, this);
     }
 
     default IMatrix4f rotateY(float ang, IMatrix4f dest) {
@@ -295,6 +303,10 @@ public interface IMatrix4f {
             .m31(m31())
             .m32(m32())
             .m33(m33());
+    }
+
+    default IMatrix4f rotateZ(float ang) {
+        return rotateZ(ang, this);
     }
     
     default IMatrix4f rotateZ(float ang, IMatrix4f dest) {

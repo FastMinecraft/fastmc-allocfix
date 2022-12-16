@@ -2,6 +2,7 @@ package dev.fastmc.allocfix.main.render.matrix;
 
 import dev.fastmc.allocfix.IMatrix3f;
 import dev.fastmc.allocfix.IMatrix4f;
+import dev.fastmc.allocfix.IPatchedMatrixStack;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix3f;
@@ -15,7 +16,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 @Mixin(MatrixStack.class)
-public class MixinMatrixStack {
+public class MixinMatrixStack implements IPatchedMatrixStack {
     @Shadow
     @Final
     private Deque<MatrixStack.Entry> stack;
@@ -79,5 +80,33 @@ public class MixinMatrixStack {
     public void pop() {
         MatrixStack.Entry entry = this.stack.removeLast();
         pool.addLast(entry);
+    }
+
+    @Override
+    public void rotate(float angle, float x, float y, float z) {
+        MatrixStack.Entry entry = this.stack.getLast();
+        ((IMatrix4f) (Object) entry.getModel()).rotate(angle, x, y, z);
+        ((IMatrix3f) (Object) entry.getNormal()).rotate(angle, x, y, z);
+    }
+
+    @Override
+    public void rotateX(float angle) {
+        MatrixStack.Entry entry = this.stack.getLast();
+        ((IMatrix4f) (Object) entry.getModel()).rotateX(angle);
+        ((IMatrix3f) (Object) entry.getNormal()).rotateX(angle);
+    }
+
+    @Override
+    public void rotateY(float angle) {
+        MatrixStack.Entry entry = this.stack.getLast();
+        ((IMatrix4f) (Object) entry.getModel()).rotateY(angle);
+        ((IMatrix3f) (Object) entry.getNormal()).rotateY(angle);
+    }
+
+    @Override
+    public void rotateZ(float angle) {
+        MatrixStack.Entry entry = this.stack.getLast();
+        ((IMatrix4f) (Object) entry.getModel()).rotateZ(angle);
+        ((IMatrix3f) (Object) entry.getNormal()).rotateZ(angle);
     }
 }

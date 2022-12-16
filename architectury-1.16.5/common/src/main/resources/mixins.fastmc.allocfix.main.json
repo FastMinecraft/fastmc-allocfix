@@ -21,6 +21,7 @@
         "render.MixinFontStorage",
         "render.MixinFrustum",
         "render.MixinImmediate",
+        "render.MixinLivingEntityRenderer",
         "render.MixinModelPart",
         "render.MixinRenderLayer",
         "render.MixinVertexBuffer",
