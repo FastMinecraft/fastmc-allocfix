@@ -1,8 +1,10 @@
 package dev.fastmc.allocfix.mixins.main.render;
 
 import dev.fastmc.allocfix.mixins.IPatchedChunkRendererRegion;
+import dev.fastmc.allocfix.mixins.IPatchedVertexConsumer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.block.BlockModelRenderer;
 import net.minecraft.client.render.model.BakedModel;
@@ -11,6 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -36,6 +39,10 @@ public abstract class MixinBlockModelRenderer {
         BlockModelRenderer.AmbientOcclusionCalculator ambientOcclusionCalculator,
         int overlay
     );
+
+    @Shadow
+    @Final
+    private BlockColors colorMap;
 
     /**
      * @author Luna
@@ -139,5 +146,59 @@ public abstract class MixinBlockModelRenderer {
             }
         }
         return rendered;
+    }
+
+    /**
+     * @author Luna
+     * @reason Memory allocation optimization
+     */
+    @Overwrite
+    private void renderQuad(
+        BlockRenderView world,
+        BlockState state,
+        BlockPos pos,
+        VertexConsumer vertexConsumer,
+        MatrixStack.Entry matrixEntry,
+        BakedQuad quad,
+        float brightness0,
+        float brightness1,
+        float brightness2,
+        float brightness3,
+        int light0,
+        int light1,
+        int light2,
+        int light3,
+        int overlay
+    ) {
+        float r;
+        float g;
+        float b;
+        if (quad.hasColor()) {
+            int i = this.colorMap.getColor(state, world, pos, quad.getColorIndex());
+            b = (float) (i >> 16 & 0xFF) / 255.0f;
+            g = (float) (i >> 8 & 0xFF) / 255.0f;
+            r = (float) (i & 0xFF) / 255.0f;
+        } else {
+            b = 1.0f;
+            g = 1.0f;
+            r = 1.0f;
+        }
+        ((IPatchedVertexConsumer) vertexConsumer).quad(
+            matrixEntry,
+            quad,
+            brightness0,
+            brightness1,
+            brightness2,
+            brightness3,
+            b,
+            g,
+            r,
+            light0,
+            light1,
+            light2,
+            light3,
+            overlay,
+            true
+        );
     }
 }

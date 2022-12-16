@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(value = { BufferBuilder.class, FixedColorVertexConsumer.class, SpriteTexturedVertexConsumer.class })
-public class MixinVertexConsumerImpls implements IPatchedVertexConsumer {
+public abstract class MixinVertexConsumerImpls implements IPatchedVertexConsumer {
     private final Vector4f vec4f = new Vector4f();
     private final Vec3f vec3f = new Vec3f();
 

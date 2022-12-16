@@ -15,4 +15,6 @@ public class MixinDebugHud {
     private void Inject$getRightText$RETURN(CallbackInfoReturnable<List<String>> cir) {
         cir.getReturnValue().set(3, AllocationCounter.INSTANCE.getRenderText());
     }
+
+
 }

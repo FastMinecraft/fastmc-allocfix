@@ -65,7 +65,15 @@ public interface MixinVertexConsumer extends IPatchedVertexConsumer {
      * @reason Memory allocation optimization
      */
     @Overwrite
-    default void quad(MatrixStack.Entry matrixEntry, BakedQuad quad, float red, float green, float blue, int light, int overlay) {
+    default void quad(
+        MatrixStack.Entry matrixEntry,
+        BakedQuad quad,
+        float red,
+        float green,
+        float blue,
+        int light,
+        int overlay
+    ) {
         Vector4f vec4f = getVec4f();
         Vec3f vec3f = getVec3f();
         Vec3i faceVec = quad.getFace().getVector();
@@ -124,6 +132,43 @@ public interface MixinVertexConsumer extends IPatchedVertexConsumer {
         int overlay,
         boolean useQuadColorData
     ) {
+        quad(
+            matrixEntry,
+            quad,
+            brightnesses[0],
+            brightnesses[1],
+            brightnesses[2],
+            brightnesses[3],
+            redIn,
+            greenIn,
+            blueIn,
+            lights[0],
+            lights[1],
+            lights[2],
+            lights[3],
+            overlay,
+            useQuadColorData
+        );
+    }
+
+    @Override
+    default void quad(
+        MatrixStack.Entry matrixEntry,
+        BakedQuad quad,
+        float brightness1,
+        float brightness2,
+        float brightness3,
+        float brightness4,
+        float redIn,
+        float greenIn,
+        float blueIn,
+        int light1,
+        int light2,
+        int light3,
+        int light4,
+        int overlay,
+        boolean useQuadColorData
+    ) {
         Vector4f vec4f = getVec4f();
         Vec3f vec3f = getVec3f();
         Vec3i faceVec = quad.getFace().getVector();
@@ -133,53 +178,181 @@ public interface MixinVertexConsumer extends IPatchedVertexConsumer {
         Matrix4f matrix4f = matrixEntry.getModel();
 
         int[] vertexData = quad.getVertexData();
-        int vertexCount = vertexData.length / 8;
-        for (int vertexIndex = 0; vertexIndex < vertexCount; ++vertexIndex) {
-            float blue;
-            float green;
-            float red;
-            float v;
-            float u;
 
-            float x = Float.intBitsToFloat(vertexData[vertexIndex * 8]);
-            float y = Float.intBitsToFloat(vertexData[vertexIndex * 8 + 1]);
-            float z = Float.intBitsToFloat(vertexData[vertexIndex * 8 + 2]);
+        float blue;
+        float green;
+        float red;
+        float v;
+        float u;
 
-            if (useQuadColorData) {
-                int bits = vertexData[vertexIndex * 8 + 3];
-                float vertRed = (float) (bits >>> 24 & 0xFF) / 255.0f;
-                float vertGreen = (float) (bits >>> 16 & 0xFF) / 255.0f;
-                float vertBlue = (float) (bits >>> 8 & 0xFF) / 255.0f;
-                red = vertRed * brightnesses[vertexIndex] * redIn;
-                green = vertGreen * brightnesses[vertexIndex] * greenIn;
-                blue = vertBlue * brightnesses[vertexIndex] * blueIn;
-            } else {
-                red = brightnesses[vertexIndex] * redIn;
-                green = brightnesses[vertexIndex] * greenIn;
-                blue = brightnesses[vertexIndex] * blueIn;
-            }
+        float x;
+        float y;
+        float z;
 
-            int light = lights[vertexIndex];
-            u = Float.intBitsToFloat(vertexData[vertexIndex * 8 + 4]);
-            v = Float.intBitsToFloat(vertexData[vertexIndex * 8 + 5]);
-            vec4f.set(x, y, z, 1.0f);
-            vec4f.transform(matrix4f);
-            this.vertex(
-                vec4f.getX(),
-                vec4f.getY(),
-                vec4f.getZ(),
-                red,
-                green,
-                blue,
-                1.0f,
-                u,
-                v,
-                overlay,
-                light,
-                vec3f.getX(),
-                vec3f.getY(),
-                vec3f.getZ()
-            );
+        int light;
+
+
+        x = Float.intBitsToFloat(vertexData[0]);
+        y = Float.intBitsToFloat(vertexData[1]);
+        z = Float.intBitsToFloat(vertexData[2]);
+
+        if (useQuadColorData) {
+            int bits = vertexData[3];
+            float vertRed = (float) (bits >>> 24 & 0xFF) / 255.0f;
+            float vertGreen = (float) (bits >>> 16 & 0xFF) / 255.0f;
+            float vertBlue = (float) (bits >>> 8 & 0xFF) / 255.0f;
+            red = vertRed * brightness1 * redIn;
+            green = vertGreen * brightness1 * greenIn;
+            blue = vertBlue * brightness1 * blueIn;
+        } else {
+            red = brightness1 * redIn;
+            green = brightness1 * greenIn;
+            blue = brightness1 * blueIn;
         }
+
+        light = light1;
+        u = Float.intBitsToFloat(vertexData[4]);
+        v = Float.intBitsToFloat(vertexData[5]);
+        vec4f.set(x, y, z, 1.0f);
+        vec4f.transform(matrix4f);
+        this.vertex(
+            vec4f.getX(),
+            vec4f.getY(),
+            vec4f.getZ(),
+            red,
+            green,
+            blue,
+            1.0f,
+            u,
+            v,
+            overlay,
+            light,
+            vec3f.getX(),
+            vec3f.getY(),
+            vec3f.getZ()
+        );
+
+
+        x = Float.intBitsToFloat(vertexData[8]);
+        y = Float.intBitsToFloat(vertexData[8 + 1]);
+        z = Float.intBitsToFloat(vertexData[8 + 2]);
+
+        if (useQuadColorData) {
+            int bits = vertexData[8 + 3];
+            float vertRed = (float) (bits >>> 24 & 0xFF) / 255.0f;
+            float vertGreen = (float) (bits >>> 16 & 0xFF) / 255.0f;
+            float vertBlue = (float) (bits >>> 8 & 0xFF) / 255.0f;
+            red = vertRed * brightness2 * redIn;
+            green = vertGreen * brightness2 * greenIn;
+            blue = vertBlue * brightness2 * blueIn;
+        } else {
+            red = brightness2 * redIn;
+            green = brightness2 * greenIn;
+            blue = brightness2 * blueIn;
+        }
+
+        light = light2;
+        u = Float.intBitsToFloat(vertexData[8 + 4]);
+        v = Float.intBitsToFloat(vertexData[8 + 5]);
+        vec4f.set(x, y, z, 1.0f);
+        vec4f.transform(matrix4f);
+        this.vertex(
+            vec4f.getX(),
+            vec4f.getY(),
+            vec4f.getZ(),
+            red,
+            green,
+            blue,
+            1.0f,
+            u,
+            v,
+            overlay,
+            light,
+            vec3f.getX(),
+            vec3f.getY(),
+            vec3f.getZ()
+        );
+
+
+        x = Float.intBitsToFloat(vertexData[2 * 8]);
+        y = Float.intBitsToFloat(vertexData[2 * 8 + 1]);
+        z = Float.intBitsToFloat(vertexData[2 * 8 + 2]);
+
+        if (useQuadColorData) {
+            int bits = vertexData[2 * 8 + 3];
+            float vertRed = (float) (bits >>> 24 & 0xFF) / 255.0f;
+            float vertGreen = (float) (bits >>> 16 & 0xFF) / 255.0f;
+            float vertBlue = (float) (bits >>> 8 & 0xFF) / 255.0f;
+            red = vertRed * brightness3 * redIn;
+            green = vertGreen * brightness3 * greenIn;
+            blue = vertBlue * brightness3 * blueIn;
+        } else {
+            red = brightness3 * redIn;
+            green = brightness3 * greenIn;
+            blue = brightness3 * blueIn;
+        }
+
+        light = light3;
+        u = Float.intBitsToFloat(vertexData[2 * 8 + 4]);
+        v = Float.intBitsToFloat(vertexData[2 * 8 + 5]);
+        vec4f.set(x, y, z, 1.0f);
+        vec4f.transform(matrix4f);
+        this.vertex(
+            vec4f.getX(),
+            vec4f.getY(),
+            vec4f.getZ(),
+            red,
+            green,
+            blue,
+            1.0f,
+            u,
+            v,
+            overlay,
+            light,
+            vec3f.getX(),
+            vec3f.getY(),
+            vec3f.getZ()
+        );
+
+
+        x = Float.intBitsToFloat(vertexData[3 * 8]);
+        y = Float.intBitsToFloat(vertexData[3 * 8 + 1]);
+        z = Float.intBitsToFloat(vertexData[3 * 8 + 2]);
+
+        if (useQuadColorData) {
+            int bits = vertexData[3 * 8 + 3];
+            float vertRed = (float) (bits >>> 24 & 0xFF) / 255.0f;
+            float vertGreen = (float) (bits >>> 16 & 0xFF) / 255.0f;
+            float vertBlue = (float) (bits >>> 8 & 0xFF) / 255.0f;
+            red = vertRed * brightness4 * redIn;
+            green = vertGreen * brightness4 * greenIn;
+            blue = vertBlue * brightness4 * blueIn;
+        } else {
+            red = brightness4 * redIn;
+            green = brightness4 * greenIn;
+            blue = brightness4 * blueIn;
+        }
+
+        light = light4;
+        u = Float.intBitsToFloat(vertexData[3 * 8 + 4]);
+        v = Float.intBitsToFloat(vertexData[3 * 8 + 5]);
+        vec4f.set(x, y, z, 1.0f);
+        vec4f.transform(matrix4f);
+        this.vertex(
+            vec4f.getX(),
+            vec4f.getY(),
+            vec4f.getZ(),
+            red,
+            green,
+            blue,
+            1.0f,
+            u,
+            v,
+            overlay,
+            light,
+            vec3f.getX(),
+            vec3f.getY(),
+            vec3f.getZ()
+        );
     }
 }

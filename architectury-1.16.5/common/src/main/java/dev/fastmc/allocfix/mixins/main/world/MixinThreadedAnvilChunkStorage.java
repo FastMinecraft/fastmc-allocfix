@@ -41,7 +41,7 @@ public abstract class MixinThreadedAnvilChunkStorage extends VersionedChunkStora
      * @reason Memory allocation optimization
      */
     @Overwrite
-    boolean isTooFarFromPlayersToSpawnMobs(ChunkPos chunkPos) {
+    public boolean isTooFarFromPlayersToSpawnMobs(ChunkPos chunkPos) {
         if (!this.ticketManager.method_20800(chunkPos.toLong())) {
             return true;
         }

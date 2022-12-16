@@ -1,18 +1,16 @@
 package dev.fastmc.allocfix.mixins.main.render;
 
-import dev.fastmc.allocfix.mixins.IPatchedMatrix4f;
+import dev.fastmc.allocfix.IMatrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
-import org.jetbrains.annotations.NotNull;
-import org.joml.Math;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Matrix4f.class)
-public class MixinMatrix4f implements IPatchedMatrix4f {
+public class MixinMatrix4f implements IMatrix4f {
     @Shadow
     public float a00;
     @Shadow
@@ -50,115 +48,187 @@ public class MixinMatrix4f implements IPatchedMatrix4f {
      * @author Luna
      * @reason Memory allocation optimization
      */
-    @Environment(EnvType.CLIENT)
     @Overwrite
+    @Environment(value= EnvType.CLIENT)
     public void multiply(Quaternion quaternion) {
-        float x = quaternion.getX();
-        float y = quaternion.getY();
-        float z = quaternion.getZ();
-        float w = quaternion.getW();
+        this.rotateQuaternion(quaternion.getX(), quaternion.getY(), quaternion.getZ(), quaternion.getW());
+    }
 
-        float j = 2.0F * x * x;
-        float k = 2.0F * y * y;
-        float l = 2.0F * z * z;
 
-        float b00 = 1.0F - k - l;
-        float b11 = 1.0F - l - j;
-        float b22 = 1.0F - j - k;
-
-        float m = x * y;
-        float n = y * z;
-        float o = z * x;
-        float p = x * w;
-        float q = y * w;
-        float r = z * w;
-
-        float b10 = 2.0F * (m + r);
-        float b01 = 2.0F * (m - r);
-        float b20 = 2.0F * (o - q);
-        float b02 = 2.0F * (o + q);
-        float b21 = 2.0F * (n + p);
-        float b12 = 2.0F * (n - p);
-
-        float t00 = this.a00 * b00 + this.a01 * b10 + this.a02 * b20;
-        float t01 = this.a00 * b01 + this.a01 * b11 + this.a02 * b21;
-        float t02 = this.a00 * b02 + this.a01 * b12 + this.a02 * b22;
-
-        float t10 = this.a10 * b00 + this.a11 * b10 + this.a12 * b20;
-        float t11 = this.a10 * b01 + this.a11 * b11 + this.a12 * b21;
-        float t12 = this.a10 * b02 + this.a11 * b12 + this.a12 * b22;
-
-        float t20 = this.a20 * b00 + this.a21 * b10 + this.a22 * b20;
-        float t21 = this.a20 * b01 + this.a21 * b11 + this.a22 * b21;
-        float t22 = this.a20 * b02 + this.a21 * b12 + this.a22 * b22;
-
-        float t30 = this.a30 * b00 + this.a31 * b10 + this.a32 * b20;
-        float t31 = this.a30 * b01 + this.a31 * b11 + this.a32 * b21;
-        float t32 = this.a30 * b02 + this.a31 * b12 + this.a32 * b22;
-
-        this.a00 = t00;
-        this.a01 = t01;
-        this.a02 = t02;
-
-        this.a10 = t10;
-        this.a11 = t11;
-        this.a12 = t12;
-
-        this.a20 = t20;
-        this.a21 = t21;
-        this.a22 = t22;
-
-        this.a30 = t30;
-        this.a31 = t31;
-        this.a32 = t32;
+    @Override
+    public float m00() {
+        return a00;
     }
 
     @Override
-    public void translate(float x, float y, float z) {
-        a03 = Math.fma(a00, x, Math.fma(a01, y, Math.fma(a02, z, a03)));
-        a13 = Math.fma(a10, x, Math.fma(a11, y, Math.fma(a12, z, a13)));
-        a23 = Math.fma(a20, x, Math.fma(a21, y, Math.fma(a22, z, a23)));
-        a33 = Math.fma(a30, x, Math.fma(a31, y, Math.fma(a32, z, a33)));
+    public float m01() {
+        return a10;
     }
 
     @Override
-    public void scale(float x, float y, float z) {
-        a00 = a00 * x;
-        a10 = a10 * x;
-        a20 = a20 * x;
-        a30 = a30 * x;
-
-        a01 = a01 * y;
-        a11 = a11 * y;
-        a21 = a21 * y;
-        a31 = a31 * y;
-
-        a02 = a02 * z;
-        a12 = a12 * z;
-        a22 = a22 * z;
-        a32 = a32 * z;
+    public float m02() {
+        return a20;
     }
 
     @Override
-    public void set(@NotNull Matrix4f other) {
-        this.a00 = other.a00;
-        this.a10 = other.a10;
-        this.a20 = other.a20;
-        this.a30 = other.a30;
+    public float m03() {
+        return a30;
+    }
 
-        this.a01 = other.a01;
-        this.a11 = other.a11;
-        this.a21 = other.a21;
-        this.a31 = other.a31;
+    @Override
+    public float m10() {
+        return a01;
+    }
 
-        this.a02 = other.a02;
-        this.a12 = other.a12;
-        this.a22 = other.a22;
-        this.a32 = other.a32;
+    @Override
+    public float m11() {
+        return a11;
+    }
 
-        this.a03 = other.a03;
-        this.a13 = other.a13;
-        this.a23 = other.a23;
-        this.a33 = other.a33;
+    @Override
+    public float m12() {
+        return a21;
+    }
+
+    @Override
+    public float m13() {
+        return a31;
+    }
+
+    @Override
+    public float m20() {
+        return a02;
+    }
+
+    @Override
+    public float m21() {
+        return a12;
+    }
+
+    @Override
+    public float m22() {
+        return a22;
+    }
+
+    @Override
+    public float m23() {
+        return a32;
+    }
+
+    @Override
+    public float m30() {
+        return a03;
+    }
+
+    @Override
+    public float m31() {
+        return a13;
+    }
+
+    @Override
+    public float m32() {
+        return a23;
+    }
+
+    @Override
+    public float m33() {
+        return a33;
+    }
+
+
+    @Override
+    public IMatrix4f m00(float m00) {
+        a00 = m00;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m01(float m01) {
+        a10 = m01;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m02(float m02) {
+        a20 = m02;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m03(float m03) {
+        a30 = m03;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m10(float m10) {
+        a01 = m10;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m11(float m11) {
+        a11 = m11;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m12(float m12) {
+        a21 = m12;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m13(float m13) {
+        a31 = m13;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m20(float m20) {
+        a02 = m20;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m21(float m21) {
+        a12 = m21;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m22(float m22) {
+        a22 = m22;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m23(float m23) {
+        a32 = m23;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m30(float m30) {
+        a03 = m30;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m31(float m31) {
+        a13 = m31;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m32(float m32) {
+        a23 = m32;
+        return this;
+    }
+
+    @Override
+    public IMatrix4f m33(float m33) {
+        a33 = m33;
+        return this;
     }
 }

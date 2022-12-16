@@ -1,7 +1,7 @@
 package dev.fastmc.allocfix.mixins.main.render;
 
-import dev.fastmc.allocfix.mixins.IPatchedMatrix3f;
-import dev.fastmc.allocfix.mixins.IPatchedMatrix4f;
+import dev.fastmc.allocfix.IMatrix3f;
+import dev.fastmc.allocfix.IMatrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix3f;
@@ -15,10 +15,11 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 @Mixin(MatrixStack.class)
-public class MixinPatchMatrixStack {
+public class MixinMatrixStack {
     @Shadow
     @Final
     private Deque<MatrixStack.Entry> stack;
+
     private final ArrayDeque<MatrixStack.Entry> pool = new ArrayDeque<>();
 
     /**
@@ -28,7 +29,7 @@ public class MixinPatchMatrixStack {
     @Overwrite
     public void translate(double x, double y, double z) {
         MatrixStack.Entry entry = this.stack.getLast();
-        ((IPatchedMatrix4f) (Object) entry.getModel()).translate((float) x, (float) y, (float) z);
+        ((IMatrix4f) (Object) entry.getModel()).translate((float) x, (float) y, (float) z);
     }
 
     /**
@@ -38,7 +39,7 @@ public class MixinPatchMatrixStack {
     @Overwrite
     public void scale(float x, float y, float z) {
         MatrixStack.Entry entry = this.stack.getLast();
-        ((IPatchedMatrix4f) (Object) entry.getModel()).scale(x, y, z);
+        ((IMatrix4f) (Object) entry.getModel()).scale(x, y, z);
 
         if (x == y && y == z) {
             if (x > 0.0F) {
@@ -51,7 +52,7 @@ public class MixinPatchMatrixStack {
         y = 1.0f / y;
         z = 1.0f / z;
         float i = MathHelper.fastInverseCbrt(x * y * z);
-        ((IPatchedMatrix3f) (Object) entry.getNormal()).scale(i * x, i * y, i * z);
+        ((IMatrix3f) (Object) entry.getNormal()).scale(i * x, i * y, i * z);
     }
 
     /**
@@ -65,8 +66,8 @@ public class MixinPatchMatrixStack {
         if (newEntry == null) {
             newEntry = new MatrixStack.Entry(new Matrix4f(), new Matrix3f());
         }
-        ((IPatchedMatrix4f) (Object) newEntry.getModel()).set(entry.getModel());
-        ((IPatchedMatrix3f) (Object) newEntry.getNormal()).set(entry.getNormal());
+        ((IMatrix4f) (Object) newEntry.getModel()).set((IMatrix4f) (Object) entry.getModel());
+        ((IMatrix3f) (Object) newEntry.getNormal()).set((IMatrix3f) (Object) entry.getNormal());
         this.stack.addLast(newEntry);
     }
 

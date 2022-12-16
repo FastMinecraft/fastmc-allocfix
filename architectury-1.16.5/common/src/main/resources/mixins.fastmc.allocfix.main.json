@@ -14,17 +14,20 @@
         "MixinSlicedVoxelShape",
         "MixinVoxelShape",
         "entity.MixinGoalSelector",
+        "render.MixinAmbientOcclusionCalculator",
         "render.MixinBackgroundRenderer",
         "render.MixinBlockModelRenderer",
         "render.MixinBufferBuilder",
         "render.MixinChunkRendererRegion",
         "render.MixinDebugHud",
         "render.MixinEntityRenderer",
+        "render.MixinFluidRenderer",
         "render.MixinFrustum",
+        "render.MixinImmediate",
         "render.MixinMatrix3f",
         "render.MixinMatrix4f",
         "render.MixinModelPart",
-        "render.MixinPatchMatrixStack",
+        "render.MixinMatrixStack",
         "render.MixinRenderLayer",
         "render.MixinVertexBuffer",
         "render.MixinVertexConsumer",
@@ -38,12 +41,16 @@
         "world.MixinBlock",
         "world.MixinBlockView",
         "world.MixinChunkRendererRegion",
+        "world.MixinClientWorld",
         "world.MixinEmptyChunk",
         "world.MixinFlowableFluid",
         "world.MixinPatchVoronoiBiomeAccessType",
         "world.MixinServerChunkManager",
+        "world.MixinThreadedAnvilChunkStorage",
         "world.MixinWorld",
-        "world.MixinWorldChunk",
-        "world.MixinThreadedAnvilChunkStorage"
+        "world.MixinWorldChunk"
+    ],
+    "mixins": [
+        "render.MixinFontStorage"
     ]
 }

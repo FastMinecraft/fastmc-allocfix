@@ -6,6 +6,7 @@ import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.util.profiler.Profiler;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.EnumSet;
@@ -35,6 +36,11 @@ public class MixinGoalSelector {
     @Final
     private EnumSet<Goal.Control> disabledControls;
 
+    /**
+     * @author Luna
+     * @reason Memory allocation optimization
+     */
+    @Overwrite
     public void tick() {
         Profiler profiler = this.profiler.get();
         profiler.push("goalCleanup");
