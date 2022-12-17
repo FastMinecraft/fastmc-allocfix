@@ -1,5 +1,6 @@
 package dev.fastmc.allocfix.main.render;
 
+import dev.fastmc.allocfix.IPatchedVisGraph;
 import dev.fastmc.common.collection.IntArrayFIFOQueueNoShrink;
 import net.minecraft.client.renderer.chunk.VisGraph;
 import net.minecraft.util.EnumFacing;
@@ -13,7 +14,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 @Mixin(VisGraph.class)
-public abstract class MixinVisGraph {
+public abstract class MixinVisGraph implements IPatchedVisGraph {
     @Shadow
     @Final
     private BitSet bitSet;
@@ -24,6 +25,7 @@ public abstract class MixinVisGraph {
     @Shadow
     protected abstract int getNeighborIndexAtFace(int pos, EnumFacing facing);
 
+    @Shadow private int empty;
     private static final EnumFacing[] FACINGS = EnumFacing.values();
 
     /**
@@ -53,5 +55,11 @@ public abstract class MixinVisGraph {
         }
 
         return set;
+    }
+
+    @Override
+    public void setOpaqueCube(int x, int y, int z) {
+        this.bitSet.set(x | y << 8 | z << 4, true);
+        --this.empty;
     }
 }
