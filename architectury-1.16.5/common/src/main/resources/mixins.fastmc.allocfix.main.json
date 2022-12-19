@@ -13,7 +13,6 @@
         "MixinNbtCompound",
         "MixinSimpleVoxelShape",
         "MixinSlicedVoxelShape",
-        "MixinVoxelShape",
         "MixinVoxelShapes",
         "entity.MixinGoalSelector",
         "render.MixinBackgroundRenderer",

@@ -1,8 +1,8 @@
 package dev.fastmc.allocfix.main;
 
-import dev.fastmc.allocfix.IPatchedVoxelShape;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.FractionalDoubleList;
 import net.minecraft.util.shape.SimpleVoxelShape;
 import net.minecraft.util.shape.VoxelSet;
 import net.minecraft.util.shape.VoxelShape;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SimpleVoxelShape.class)
-public class MixinSimpleVoxelShape extends VoxelShape implements IPatchedVoxelShape {
+public class MixinSimpleVoxelShape extends VoxelShape {
     public MixinSimpleVoxelShape(VoxelSet voxelSet) {
         super(voxelSet);
     }
@@ -30,9 +30,11 @@ public class MixinSimpleVoxelShape extends VoxelShape implements IPatchedVoxelSh
     }
 
     @Override
-    public int hash() {
+    public int hashCode() {
         return hash;
     }
+
+    private static final FractionalDoubleList[] CACHE = new FractionalDoubleList[2048];
 
     /**
      * @author Luna
@@ -40,6 +42,17 @@ public class MixinSimpleVoxelShape extends VoxelShape implements IPatchedVoxelSh
      */
     @Overwrite
     public DoubleList getPointPositions(Direction.Axis axis) {
-        return IPatchedVoxelShape.getFractionalDoubleList(this.voxels.getSize(axis));
+        int sectionCount = this.voxels.getSize(axis);
+        if (sectionCount >= 2048) {
+            return new FractionalDoubleList(sectionCount);
+        }
+
+        FractionalDoubleList value = CACHE[sectionCount];
+        if (value == null) {
+            value = new FractionalDoubleList(sectionCount);
+            CACHE[sectionCount] = value;
+        }
+
+        return value;
     }
 }

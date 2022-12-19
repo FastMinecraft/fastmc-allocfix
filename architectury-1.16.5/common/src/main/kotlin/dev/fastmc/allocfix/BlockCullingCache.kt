@@ -34,8 +34,8 @@ class BlockCullingCache {
                 false
             }
             else -> {
-                var hash = (shape as IPatchedVoxelShape).hash()
-                hash = hash * 31 + (neighbor as IPatchedVoxelShape).hash()
+                var hash = shape.hashCode()
+                hash = hash * 31 + neighbor.hashCode()
                 hash = hash * 31 + direction.ordinal
 
                 when (coveredSideCache.get(hash)) {
@@ -136,7 +136,7 @@ class BlockCullingCache {
 
         if (result == null) {
             val shape = state.getCullingShape(blockView, cullingFaceTempPos.set(x, y, z))
-            val hash = (shape as IPatchedVoxelShape).hash() * 31 + direction.ordinal
+            val hash = shape.hashCode() * 31 + direction.ordinal
             result = cullingFaceCache.get(hash)
             if (result == null) {
                 result = VoxelShapes.extrudeFace(shape, direction)!!
@@ -170,7 +170,7 @@ class BlockCullingCache {
     }
 
     private inline fun hash(a: VoxelShape, b: VoxelShape): Int {
-        return (a as IPatchedVoxelShape).hash() * 31 + (b as IPatchedVoxelShape).hash()
+        return a.hashCode() * 31 + b.hashCode()
     }
 
     companion object {

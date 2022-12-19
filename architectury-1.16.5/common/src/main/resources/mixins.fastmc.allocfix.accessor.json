@@ -4,9 +4,9 @@
     "compatibilityLevel": "JAVA_8",
     "package": "dev.fastmc.allocfix.accessor",
     "client": [
-        "AccessorThreadedAnvilChunkStorage",
         "AccessorFrustum",
         "AccessorPlayerChunkWatchingManager",
+        "AccessorThreadedAnvilChunkStorage",
         "AccessorVoxelShape"
     ]
 }

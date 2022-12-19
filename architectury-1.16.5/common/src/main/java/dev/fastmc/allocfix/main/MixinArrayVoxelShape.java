@@ -1,6 +1,5 @@
 package dev.fastmc.allocfix.main;
 
-import dev.fastmc.allocfix.IPatchedVoxelShape;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import net.minecraft.util.shape.ArrayVoxelShape;
 import net.minecraft.util.shape.VoxelSet;
@@ -10,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ArrayVoxelShape.class)
-public class MixinArrayVoxelShape implements IPatchedVoxelShape {
+public class MixinArrayVoxelShape {
     private static final int CLASS_HASH = ArrayVoxelShape.class.hashCode();
 
     private int hash = 0;
@@ -30,7 +29,7 @@ public class MixinArrayVoxelShape implements IPatchedVoxelShape {
     }
 
     @Override
-    public int hash() {
+    public int hashCode() {
         return hash;
     }
 }
