@@ -16,8 +16,9 @@ public class MixinNbtCompound {
     private static HashMap<?, ?> Redirect$init$INVOKE$Maps$newHashMap() {
         return new DummyLinkedHashMap<>(new Object2ObjectOpenHashMap<>());
     }
+
     @Redirect(method = "copy()Lnet/minecraft/nbt/NbtCompound;", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Maps;newHashMap(Ljava/util/Map;)Ljava/util/HashMap;", remap = false))
-    private static HashMap<?, ?> Redirect$copy$INVOKE$Maps$newHashMap(Map<?, ?> map) {
+    private HashMap<?, ?> Redirect$copy$INVOKE$Maps$newHashMap(Map<?, ?> map) {
         return new DummyLinkedHashMap<>(new Object2ObjectOpenHashMap<>(map));
     }
 }
