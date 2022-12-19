@@ -2,6 +2,9 @@ import dev.fastmc.modsetup.minecraftVersion
 import me.luna.jaroptimizer.JarOptimizerPluginExtension
 import kotlin.math.max
 
+group = "dev.fastmc"
+version = "0.0.2"
+
 runVmOptions {
     val threads = Runtime.getRuntime().availableProcessors()
     add(
@@ -34,11 +37,6 @@ runVmOptions {
 plugins {
     id("me.luna.jaroptimizer").version("1.1")
     id("dev.fastmc.modsetup.root").version("1.0-SNAPSHOT")
-}
-
-allprojects {
-    group = "me.luna"
-    version = "0.0.1"
 }
 
 subprojects {
