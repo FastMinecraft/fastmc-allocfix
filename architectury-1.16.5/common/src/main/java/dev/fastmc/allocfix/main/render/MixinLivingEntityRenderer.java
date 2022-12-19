@@ -42,7 +42,7 @@ public abstract class MixinLivingEntityRenderer<T extends LivingEntity, M extend
      * @reason Memory allocation optimization
      */
     @Overwrite
-    protected void setupTransforms(T entity, MatrixStack matrices, float animationProgress, float bodyYaw, float tickDelta) {
+    public void setupTransforms(T entity, MatrixStack matrices, float animationProgress, float bodyYaw, float tickDelta) {
         String string;
         EntityPose entityPose;
 
