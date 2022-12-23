@@ -36,7 +36,7 @@ runVmOptions {
 
 plugins {
     id("me.luna.jaroptimizer").version("1.1")
-    id("dev.fastmc.modsetup.root").version("1.0-SNAPSHOT")
+    id("dev.fastmc.modsetup.root").version("1.0.1")
 }
 
 subprojects {
