@@ -20,6 +20,10 @@ object AllocationCounter {
     }
 
     fun getRenderText(): String {
+        if (allocations.isEmpty()) {
+            return "0.0 MB/s"
+        }
+
         val current = System.nanoTime()
         while (allocations.isNotEmpty() && allocations.peek().time < current) {
             allocations.poll()
@@ -29,8 +33,9 @@ object AllocationCounter {
         for (entry in allocations) {
             allocation += entry.allocation
         }
+        val timeLength = (allocations.last.time - allocations.first.time) / 1_000_000_000.0f
 
-        return "%.2f MB/s".format(allocation / 3.0f / 1024.0f)
+        return "%.2f MB/s".format(allocation / timeLength / 1024.0f)
     }
 
     fun reset() {
