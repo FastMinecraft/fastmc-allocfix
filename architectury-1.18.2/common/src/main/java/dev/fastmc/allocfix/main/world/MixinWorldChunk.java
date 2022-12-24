@@ -50,29 +50,26 @@ public abstract class MixinWorldChunk extends Chunk implements IPatchedBlockView
             if (y == 60) {
                 blockState = Blocks.BARRIER.getDefaultState();
             }
-
             if (y == 70) {
                 blockState = DebugChunkGenerator.getBlockState(x, z);
             }
-
             return blockState == null ? Blocks.AIR.getDefaultState() : blockState;
-        } else {
-            try {
-                int l = this.getSectionIndex(y);
-                if (l >= 0 && l < this.sectionArray.length) {
-                    ChunkSection chunkSection = this.sectionArray[l];
-                    if (!chunkSection.isEmpty()) {
-                        return chunkSection.getBlockState(x & 15, y & 15, z & 15);
-                    }
-                }
-
-                return Blocks.AIR.getDefaultState();
-            } catch (Throwable t) {
-                CrashReport crashReport = CrashReport.create(t, "Getting block state");
-                CrashReportSection crashReportSection = crashReport.addElement("Block being got");
-                crashReportSection.add("Location", () -> CrashReportSection.createPositionString(this, x, y, z));
-                throw new CrashException(crashReport);
+        }
+        try {
+            ChunkSection chunkSection;
+            int l = this.getSectionIndex(y);
+            if (l >= 0 && l < this.sectionArray.length && !(chunkSection = this.sectionArray[l]).isEmpty()) {
+                return chunkSection.getBlockState(x & 0xF, y & 0xF, z & 0xF);
             }
+            return Blocks.AIR.getDefaultState();
+        } catch (Throwable throwable) {
+            CrashReport crashReport = CrashReport.create(throwable, "Getting block state");
+            CrashReportSection crashReportSection = crashReport.addElement("Block being got");
+            crashReportSection.add(
+                "Location",
+                () -> CrashReportSection.createPositionString(this, x, y, z)
+            );
+            throw new CrashException(crashReport);
         }
     }
 }

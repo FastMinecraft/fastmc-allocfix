@@ -5,7 +5,9 @@
     "package": "dev.fastmc.allocfix.accessor",
     "client": [
         "AccessorFrustum",
-        "AccessorPlayerChunkWatchingManager",
         "AccessorVoxelShape"
+    ],
+    "mixins": [
+        "AccessorThreadedAnvilChunkStorage"
     ]
 }

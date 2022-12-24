@@ -71,6 +71,12 @@ subprojects {
                 )
             }
         }
+
+        withType<net.fabricmc.loom.task.GenerateSourcesTask> {
+            doFirst {
+                System.setProperty("fabric.loom.genSources.debug", "true")
+            }
+        }
     }
 }
 

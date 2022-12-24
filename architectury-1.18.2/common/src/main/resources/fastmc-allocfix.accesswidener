@@ -11,7 +11,7 @@ accessible class net/minecraft/client/render/RenderLayer$OutlineMode
 accessible class net/minecraft/server/world/ThreadedAnvilChunkStorage$TicketManager
 accessible class net/minecraft/client/render/RenderLayer$MultiPhaseParameters
 accessible class net/minecraft/client/render/chunk/RenderedChunk
-
+accessible class net/minecraft/server/world/ServerChunkManager$ChunkWithHolder
 
 accessible method net/minecraft/client/util/math/MatrixStack$Entry <init> (Lnet/minecraft/util/math/Matrix4f;Lnet/minecraft/util/math/Matrix3f;)V
 
@@ -25,6 +25,9 @@ accessible method net/minecraft/client/render/RenderLayer$MultiPhase <init> (Lja
 
 accessible method net/minecraft/util/shape/ArrayVoxelShape <init> (Lnet/minecraft/util/shape/VoxelSet;Lit/unimi/dsi/fastutil/doubles/DoubleList;Lit/unimi/dsi/fastutil/doubles/DoubleList;Lit/unimi/dsi/fastutil/doubles/DoubleList;)V
 accessible method net/minecraft/util/shape/SimpleVoxelShape <init> (Lnet/minecraft/util/shape/VoxelSet;)V
+
+accessible method net/minecraft/server/world/ServerChunkManager$ChunkWithHolder <init> (Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/server/world/ChunkHolder;)V
+
 
 accessible field net/minecraft/client/render/RenderPhase PARTICLES_TARGET Lnet/minecraft/client/render/RenderPhase$Target;
 accessible field net/minecraft/client/render/RenderPhase CLOUDS_TARGET Lnet/minecraft/client/render/RenderPhase$Target;
@@ -99,3 +102,8 @@ accessible field net/minecraft/client/render/WorldRenderer$ChunkInfo propagation
 mutable field net/minecraft/client/render/WorldRenderer$ChunkInfo propagationLevel I
 
 accessible field net/minecraft/client/model/ModelPart cuboids Ljava/util/List;
+
+accessible field net/minecraft/server/world/ServerChunkManager$ChunkWithHolder chunk Lnet/minecraft/world/chunk/WorldChunk;
+mutable field net/minecraft/server/world/ServerChunkManager$ChunkWithHolder chunk Lnet/minecraft/world/chunk/WorldChunk;
+accessible field net/minecraft/server/world/ServerChunkManager$ChunkWithHolder holder Lnet/minecraft/server/world/ChunkHolder;
+mutable field net/minecraft/server/world/ServerChunkManager$ChunkWithHolder holder Lnet/minecraft/server/world/ChunkHolder;

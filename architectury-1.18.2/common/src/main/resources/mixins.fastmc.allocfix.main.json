@@ -8,11 +8,11 @@
     "package": "dev.fastmc.allocfix.main",
     "client": [
         "MixinArrayVoxelShape",
-        "MixinDirection",
         "MixinMinecraftClient",
         "MixinNbtCompound",
         "MixinSimpleVoxelShape",
         "MixinSlicedVoxelShape",
+        "MixinSoundExecutor",
         "entity.MixinGoalSelector",
         "render.MixinBufferBuilder",
         "render.MixinBufferRenderer",
@@ -21,6 +21,7 @@
         "render.MixinFontStorage",
         "render.MixinFrustum",
         "render.MixinImmediate",
+        "render.MixinLivingEntityRenderer",
         "render.MixinModelPart",
         "render.MixinVertexConsumer",
         "render.MixinVertexConsumerImpls",
@@ -41,5 +42,10 @@
         "world.MixinRenderedChunk",
         "world.MixinWorld",
         "world.MixinWorldChunk"
+    ],
+    "mixins": [
+        "MixinCubicSampler",
+        "world.MixinServerChunkManager",
+        "world.MixinThreadedAnvilChunkStorage"
     ]
 }
