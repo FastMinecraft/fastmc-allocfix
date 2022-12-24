@@ -1,0 +1,26 @@
+modLoader = "javafml"
+loaderVersion = "[40,)"
+issueTrackerURL = "https://github.com/FastMinecraft/fastmc-allocfix/issues"
+license = "MIT"
+
+[[mods]]
+modId = "fastmc-allocfix"
+version = "${version}"
+displayName = "Fast Minecraft Allocation Fix"
+authors = "Luna"
+description = "Fixing Mojang's massive amount of memory allocation trolling"
+#logoFile = ""
+
+[[dependencies.fastmc-allocfix]]
+modId = "forge"
+mandatory = true
+versionRange = "[40,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.fastmc-allocfix]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18.2,)"
+ordering = "NONE"
+side = "BOTH"

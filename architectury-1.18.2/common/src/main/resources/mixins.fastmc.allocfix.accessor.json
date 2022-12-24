@@ -1,0 +1,11 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "compatibilityLevel": "JAVA_8",
+    "package": "dev.fastmc.allocfix.accessor",
+    "client": [
+        "AccessorFrustum",
+        "AccessorPlayerChunkWatchingManager",
+        "AccessorVoxelShape"
+    ]
+}

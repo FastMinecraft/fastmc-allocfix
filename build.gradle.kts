@@ -8,6 +8,9 @@ version = "0.0.2"
 runVmOptions {
     val threads = Runtime.getRuntime().availableProcessors()
     add(
+        "-Djoml.fastmath=true",
+        "-Djoml.sinLookup=true",
+        "-Djoml.useMathFma=true",
         "-Xms2G",
         "-Xmx2G",
         "-XX:+UnlockExperimentalVMOptions",

@@ -1,19 +1,22 @@
 package dev.fastmc.allocfix.main.world;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.MutableWorldProperties;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeParticleConfig;
 import net.minecraft.world.dimension.DimensionType;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,21 +26,21 @@ import java.util.function.Supplier;
 
 @Mixin(ClientWorld.class)
 public abstract class MixinClientWorld extends World {
-
-    @Shadow
-    protected abstract void addParticle(BlockPos pos, BlockState state, ParticleEffect parameters, boolean bl);
-
     protected MixinClientWorld(
         MutableWorldProperties properties,
         RegistryKey<World> registryRef,
-        DimensionType dimensionType,
+        RegistryEntry<DimensionType> registryEntry,
         Supplier<Profiler> profiler,
         boolean isClient,
         boolean debugWorld,
         long seed
     ) {
-        super(properties, registryRef, dimensionType, profiler, isClient, debugWorld, seed);
+        super(properties, registryRef, registryEntry, profiler, isClient, debugWorld, seed);
     }
+
+    @Shadow
+    protected abstract void addParticle(BlockPos pos, BlockState state, ParticleEffect parameters, boolean bl);
+
 
     /**
      * @author Luna
@@ -45,17 +48,17 @@ public abstract class MixinClientWorld extends World {
      */
     @Overwrite
     public void randomBlockDisplayTick(
-        int xCenter,
-        int yCenter,
-        int zCenter,
+        int centerX,
+        int centerY,
+        int centerZ,
         int radius,
         Random random,
-        boolean spawnBarrierParticles,
+        @Nullable Block block,
         BlockPos.Mutable pos
     ) {
-        int i = xCenter + this.random.nextInt(radius) - this.random.nextInt(radius);
-        int j = yCenter + this.random.nextInt(radius) - this.random.nextInt(radius);
-        int k = zCenter + this.random.nextInt(radius) - this.random.nextInt(radius);
+        int i = centerX + this.random.nextInt(radius) - this.random.nextInt(radius);
+        int j = centerY + this.random.nextInt(radius) - this.random.nextInt(radius);
+        int k = centerZ + this.random.nextInt(radius) - this.random.nextInt(radius);
         pos.set(i, j, k);
         BlockState blockState = this.getBlockState(pos);
         blockState.getBlock().randomDisplayTick(blockState, this, pos, random);
@@ -69,9 +72,10 @@ public abstract class MixinClientWorld extends World {
                 this.addParticle(blockPos, this.getBlockState(blockPos), particleEffect, bl);
             }
         }
-        if (spawnBarrierParticles && blockState.isOf(Blocks.BARRIER)) {
+
+        if (block == blockState.getBlock()) {
             this.addParticle(
-                ParticleTypes.BARRIER,
+                new BlockStateParticleEffect(ParticleTypes.BLOCK_MARKER, blockState),
                 (double) i + 0.5,
                 (double) j + 0.5,
                 (double) k + 0.5,
@@ -80,8 +84,9 @@ public abstract class MixinClientWorld extends World {
                 0.0
             );
         }
+
         if (!blockState.isFullCube(this, pos)) {
-            BiomeParticleConfig config = this.getBiome(pos).getParticleConfig().orElse(null);
+            BiomeParticleConfig config = this.getBiome(pos).value().getParticleConfig().orElse(null);
             if (config != null && config.shouldAddParticle(this.random)) {
                 this.addParticle(
                     config.getParticle(),
