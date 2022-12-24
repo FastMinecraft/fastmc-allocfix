@@ -8,6 +8,7 @@
     "package": "dev.fastmc.allocfix.main",
     "client": [
         "MixinArrayVoxelShape",
+        "MixinCubicSampler",
         "MixinMinecraftClient",
         "MixinNbtCompound",
         "MixinSimpleVoxelShape",
@@ -40,12 +41,9 @@
         "world.MixinEmptyChunk",
         "world.MixinFlowableFluid",
         "world.MixinRenderedChunk",
+        "world.MixinServerChunkManager",
+        "world.MixinServerWorld",
         "world.MixinWorld",
         "world.MixinWorldChunk"
-    ],
-    "mixins": [
-        "MixinCubicSampler",
-        "world.MixinServerChunkManager",
-        "world.MixinThreadedAnvilChunkStorage"
     ]
 }
