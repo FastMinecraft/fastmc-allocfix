@@ -26,6 +26,7 @@
         "render.MixinModelPart",
         "render.MixinVertexConsumer",
         "render.MixinVertexConsumerImpls",
+        "render.MixinWeightedBakedModel",
         "render.matrix.MixinMatrix3f",
         "render.matrix.MixinMatrix4f",
         "render.matrix.MixinMatrixStack",
