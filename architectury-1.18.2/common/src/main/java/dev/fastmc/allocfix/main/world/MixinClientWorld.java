@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeParticleConfig;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.level.ColorResolver;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -114,6 +115,42 @@ public abstract class MixinClientWorld extends World implements IPatchedClientWo
                 );
             }
         }
+    }
+
+    /**
+     * @author Luna
+     * @reason Memory allocation optimization
+     */
+    @Overwrite
+    public int calculateColor(BlockPos pos, ColorResolver colorResolver) {
+        int i = MinecraftClient.getInstance().options.biomeBlendRadius;
+        if (i == 0) {
+            return colorResolver.getColor(this.getBiome(pos).value(), pos.getX(), pos.getZ());
+        }
+        int total = (i * 2 + 1) * (i * 2 + 1);
+        int r = 0;
+        int g = 0;
+        int b = 0;
+
+        BlockPos.Mutable mutable = new BlockPos.Mutable();
+        int startX = pos.getX() - i;
+        int startZ = pos.getZ() - i;
+        int endX = pos.getX() + i;
+        int endZ = pos.getZ() + i;
+        int y = pos.getY();
+
+        for (int x = startX; x <= endX; ++x) {
+            for (int z = startZ; z <= endZ; ++z) {
+                mutable.set(x, y, z);
+                int color = colorResolver.getColor(this.getBiome(mutable).value(), x, z);
+                r += color >> 16 & 0xFF;
+                g += color >> 8 & 0xFF;
+                b += color & 0xFF;
+            }
+        }
+
+
+        return (r / total & 0xFF) << 16 | (g / total & 0xFF) << 8 | b / total & 0xFF;
     }
 
     /**
