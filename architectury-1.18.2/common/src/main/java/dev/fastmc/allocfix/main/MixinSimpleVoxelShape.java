@@ -19,6 +19,7 @@ public class MixinSimpleVoxelShape extends VoxelShape {
     }
 
     private static final int CLASS_HASH = SimpleVoxelShape.class.hashCode();
+
     private int hash = 0;
 
     @Inject(method = "<init>", at = @At("RETURN"))
