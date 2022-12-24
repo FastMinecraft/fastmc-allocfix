@@ -20,12 +20,12 @@ public class MixinCubicSampler {
      */
     @Overwrite
     public static Vec3d sampleColor(Vec3d pos, CubicSampler.RgbFetcher rgbFetcher) {
-        int x = MathHelper.floor(pos.getX());
-        int y = MathHelper.floor(pos.getY());
-        int z = MathHelper.floor(pos.getZ());
-        double dx = pos.getX() - (double) x;
-        double dy = pos.getY() - (double) y;
-        double dz = pos.getZ() - (double) z;
+        int intX = MathHelper.floor(pos.getX());
+        int intY = MathHelper.floor(pos.getY());
+        int intZ = MathHelper.floor(pos.getZ());
+        double dx = pos.getX() - intX;
+        double dy = pos.getY() - intY;
+        double dz = pos.getZ() - intZ;
         double total = 0.0;
 
         double r = 0.0;
@@ -34,15 +34,15 @@ public class MixinCubicSampler {
 
         for (int ix = 0; ix < 6; ++ix) {
             double weightX = MathHelper.lerp(dx, DENSITY_CURVE[ix + 1], DENSITY_CURVE[ix]);
-            int sampleX = x - 2 + ix;
+            int sampleX = intX - 2 + ix;
 
             for (int iy = 0; iy < 6; ++iy) {
                 double weightY = MathHelper.lerp(dy, DENSITY_CURVE[iy + 1], DENSITY_CURVE[iy]);
-                int sampleY = y - 2 + iy;
+                int sampleY = intY - 2 + iy;
 
                 for (int iz = 0; iz < 6; ++iz) {
                     double weightZ = MathHelper.lerp(dz, DENSITY_CURVE[iz + 1], DENSITY_CURVE[iz]);
-                    int sampleZ = z - 2 + iz;
+                    int sampleZ = intZ - 2 + iz;
                     double weight = weightX * weightY * weightZ;
 
                     Vec3d color = rgbFetcher.fetch(sampleX, sampleY, sampleZ);

@@ -15,6 +15,7 @@
         "MixinSlicedVoxelShape",
         "MixinSoundExecutor",
         "entity.MixinGoalSelector",
+        "render.MixinBackgroundRenderer",
         "render.MixinBufferBuilder",
         "render.MixinBufferRenderer",
         "render.MixinDebugHud",
@@ -45,6 +46,10 @@
         "world.MixinServerChunkManager",
         "world.MixinServerWorld",
         "world.MixinWorld",
-        "world.MixinWorldChunk"
+        "world.MixinWorldChunk",
+        "world.dimensionfx.MixinDimensionEffects",
+        "world.dimensionfx.MixinEnd",
+        "world.dimensionfx.MixinNether",
+        "world.dimensionfx.MixinOverworld"
     ]
 }
