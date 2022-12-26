@@ -28,6 +28,9 @@ accessible method net/minecraft/util/shape/SimpleVoxelShape <init> (Lnet/minecra
 
 accessible method net/minecraft/server/world/ServerChunkManager$ChunkWithHolder <init> (Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/server/world/ChunkHolder;)V
 
+accessible method net/minecraft/client/render/BufferBuilder$DrawArrayParameters <init> (Lnet/minecraft/client/render/VertexFormat;IILnet/minecraft/client/render/VertexFormat$DrawMode;Lnet/minecraft/client/render/VertexFormat$IntType;ZZ)V
+accessible method net/minecraft/client/render/BufferBuilder$State <init> (Lnet/minecraft/client/render/VertexFormat$DrawMode;I[Lnet/minecraft/util/math/Vec3f;FFF)V
+
 
 accessible field net/minecraft/client/render/RenderPhase PARTICLES_TARGET Lnet/minecraft/client/render/RenderPhase$Target;
 accessible field net/minecraft/client/render/RenderPhase CLOUDS_TARGET Lnet/minecraft/client/render/RenderPhase$Target;

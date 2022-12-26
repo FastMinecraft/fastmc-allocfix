@@ -4,7 +4,7 @@
     "priority": -69420,
     "mixinPriority": -69420,
     "verbose": true,
-    "compatibilityLevel": "JAVA_8",
+    "compatibilityLevel": "JAVA_17",
     "package": "dev.fastmc.allocfix.main",
     "client": [
         "MixinArrayVoxelShape",
@@ -17,6 +17,7 @@
         "entity.MixinGoalSelector",
         "render.MixinBackgroundRenderer",
         "render.MixinBufferBuilder",
+        "render.MixinBufferBuilderState",
         "render.MixinBufferRenderer",
         "render.MixinDebugHud",
         "render.MixinEntityRenderer",

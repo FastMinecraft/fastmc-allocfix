@@ -2,17 +2,14 @@ package dev.fastmc.allocfix;
 
 import dev.fastmc.common.BufferUtils;
 import it.unimi.dsi.fastutil.ints.IntArrays;
-import it.unimi.dsi.fastutil.ints.IntComparator;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.BitSet;
 
-public final class QuadSort implements IntComparator {
+public final class QuadSort {
     private final BitSet bitset = new BitSet();
-    private float[] distances;
-    private int[] sortArray;
-    private int[] sortSuppArray;
+    private final PrimitiveSortHelper helper = new PrimitiveSortHelper();
     private ByteBuffer tempBuffer;
 
     public void sortQuads(
@@ -30,14 +27,13 @@ public final class QuadSort implements IntComparator {
         int quadByteSize = vertexByteSize * 4;
         int quadCount = vertexCount / 4;
 
-        if (sortArray == null || sortArray.length < quadCount) {
-            sortArray = new int[quadCount + quadCount >> 1];
-            sortSuppArray = new int[sortArray.length];
-            distances = new float[sortArray.length];
-        }
+        helper.ensureCapacity(quadCount);
+        float[] distanceArray = helper.getDistanceArray();
+        int[] sortArray = helper.getSortArray();
+        int[] sortSuppArray = helper.getSortSuppArray();
 
         for (int i = 0; i < quadCount; ++i) {
-            distances[i] = getDistanceSq(
+            distanceArray[i] = getDistanceSq(
                 rawBuffer,
                 cameraX,
                 cameraY,
@@ -49,7 +45,7 @@ public final class QuadSort implements IntComparator {
             sortSuppArray[i] = i;
         }
 
-        IntArrays.mergeSort(sortArray, 0, quadCount, this, sortSuppArray);
+        IntArrays.mergeSort(sortArray, 0, quadCount, helper, sortSuppArray);
 
         if (tempBuffer == null || tempBuffer.capacity() < quadByteSize) {
             tempBuffer = BufferUtils.allocateByte(quadByteSize);
@@ -91,6 +87,7 @@ public final class QuadSort implements IntComparator {
         }
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private static float getDistanceSq(
         ByteBuffer buffer,
         float cameraX,
@@ -120,15 +117,5 @@ public final class QuadSort implements IntComparator {
         float zDiff = (z1 + z2 + z3 + z4) * 0.25F - cameraZ;
 
         return xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
-    }
-
-    @Override
-    public int compare(int k1, int k2) {
-        return Float.compare(distances[k2], distances[k1]);
-    }
-
-    @Override
-    public int compare(Integer o1, Integer o2) {
-        return Float.compare(distances[o2], distances[o1]);
     }
 }
