@@ -1,6 +1,6 @@
 package dev.fastmc.allocfix.main.render;
 
-import dev.fastmc.allocfix.util.AdaptersKt;
+import dev.fastmc.allocfix.util.Adapters;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vector4f;
@@ -29,7 +29,7 @@ public class MixinFrustum {
      */
     @Overwrite
     private void init(Matrix4f modelViewIn, Matrix4f projectionIn) {
-        org.joml.Matrix4f matrix = AdaptersKt.toJoml(projectionIn).mul(AdaptersKt.toJoml(modelViewIn));
+        org.joml.Matrix4f matrix = Adapters.toJoml(projectionIn).mul(Adapters.toJoml(modelViewIn));
         jomlFrustum.set(matrix, false);
         matrix.transpose();
         org.joml.Vector4f vector = new org.joml.Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
