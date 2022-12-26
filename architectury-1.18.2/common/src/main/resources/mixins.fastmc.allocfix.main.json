@@ -56,5 +56,9 @@
         "world.dimensionfx.MixinEnd",
         "world.dimensionfx.MixinNether",
         "world.dimensionfx.MixinOverworld"
+    ],
+    "mixins": [
+        "world.MixinBiome",
+        "world.MixinBiomeEffects"
     ]
 }
