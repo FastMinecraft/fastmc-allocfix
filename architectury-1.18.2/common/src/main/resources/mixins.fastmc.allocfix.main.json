@@ -20,6 +20,7 @@
         "render.MixinBufferBuilder",
         "render.MixinBufferBuilderState",
         "render.MixinBufferRenderer",
+        "render.MixinCamera",
         "render.MixinDebugHud",
         "render.MixinEntityRenderer",
         "render.MixinFontStorage",
