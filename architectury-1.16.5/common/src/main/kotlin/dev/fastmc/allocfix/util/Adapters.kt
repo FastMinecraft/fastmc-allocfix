@@ -1,16 +1,18 @@
+@file:JvmName("Adapters")
 @file:Suppress("NOTHING_TO_INLINE")
 
 package dev.fastmc.allocfix.util
 
-import net.minecraft.block.ChestBlock
-import net.minecraft.block.entity.*
-import net.minecraft.client.MinecraftClient
-import net.minecraft.entity.Entity
-import net.minecraft.entity.passive.CowEntity
-import net.minecraft.util.Identifier
 import net.minecraft.util.math.Matrix4f
-import net.minecraft.util.profiler.Profiler
-import net.minecraft.world.World
+import net.minecraft.util.math.Quaternion
+
+inline fun Quaternion.toJoml(): org.joml.Quaternionf {
+    return org.joml.Quaternionf(x, y, z, w)
+}
+
+inline fun Quaternion.toJoml(dest: org.joml.Quaternionf): org.joml.Quaternionf {
+    return dest.set(x, y, z, w)
+}
 
 fun Matrix4f.toJoml(dest: org.joml.Matrix4f): org.joml.Matrix4f {
     dest.m00(this.a00)
