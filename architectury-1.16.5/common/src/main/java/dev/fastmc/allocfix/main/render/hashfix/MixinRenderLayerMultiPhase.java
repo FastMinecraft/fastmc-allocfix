@@ -4,6 +4,7 @@ import dev.fastmc.allocfix.IPatchedMultiPhaseParameters;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexFormat;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,29 +13,20 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderLayer.MultiPhase.class)
-public class MixinRenderLayerMultiPhase extends RenderLayer {
+public class MixinRenderLayerMultiPhase extends RenderPhase {
     @Shadow
     @Final
-    private MultiPhaseParameters phases;
+    private RenderLayer.MultiPhaseParameters phases;
 
     @Mutable
     @Shadow
     @Final
-    private static ObjectOpenCustomHashSet<MultiPhase> CACHE;
+    private static ObjectOpenCustomHashSet<RenderLayer.MultiPhase> CACHE;
 
     private final static Long2ObjectOpenHashMap<RenderLayer.MultiPhase> CACHE_MAP = new Long2ObjectOpenHashMap<>();
 
-    public MixinRenderLayerMultiPhase(
-        String name,
-        VertexFormat vertexFormat,
-        int drawMode,
-        int expectedBufferSize,
-        boolean hasCrumbling,
-        boolean translucent,
-        Runnable startAction,
-        Runnable endAction
-    ) {
-        super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
+    public MixinRenderLayerMultiPhase(String name, Runnable beginAction, Runnable endAction) {
+        super(name, beginAction, endAction);
     }
 
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/RenderLayer;hashCode()I"))
@@ -58,7 +50,7 @@ public class MixinRenderLayerMultiPhase extends RenderLayer {
         int expectedBufferSize,
         boolean hasCrumbling,
         boolean translucent,
-        MultiPhaseParameters phases,
+        RenderLayer.MultiPhaseParameters phases,
         CallbackInfo ci
     ) {
         IPatchedMultiPhaseParameters patched = (IPatchedMultiPhaseParameters) (Object) phases;
@@ -76,14 +68,14 @@ public class MixinRenderLayerMultiPhase extends RenderLayer {
      * @reason Memory allocation optimization
      */
     @Overwrite
-    public static MultiPhase of(
+    private static RenderLayer.MultiPhase of(
         String name,
         VertexFormat vertexFormat,
         int drawMode,
         int expectedBufferSize,
         boolean hasCrumbling,
         boolean translucent,
-        MultiPhaseParameters phases
+        RenderLayer.MultiPhaseParameters phases
     ) {
         long hash = name.hashCode();
         hash = 31 * hash + phases.hashCode();
