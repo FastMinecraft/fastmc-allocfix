@@ -34,7 +34,7 @@ interface IPatchedVertexConsumer {
         private val map = MapMaker().weakKeys().makeMap<IPatchedVertexConsumer, Pair<Vec3f, Vector4f>>()
 
         fun get(consumer: IPatchedVertexConsumer): Pair<Vec3f, Vector4f> {
-            return map.computeIfAbsent(consumer) { Pair(consumer.vec3f, consumer.vec4f) }
+            return map.computeIfAbsent(consumer) { Pair(Vec3f(), Vector4f()) }
         }
     }
 }

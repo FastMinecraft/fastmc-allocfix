@@ -9,7 +9,10 @@ import net.minecraft.util.math.Vector4f;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(value = { BufferBuilder.class, FixedColorVertexConsumer.class, SpriteTexturedVertexConsumer.class })
+@Mixin(
+    value = { BufferBuilder.class, FixedColorVertexConsumer.class, SpriteTexturedVertexConsumer.class },
+    targets = { "net/minecraft/client/render/VertexConsumers$Dual" }
+)
 public abstract class MixinVertexConsumerImpls implements IPatchedVertexConsumer {
     private final Vector4f vec4f = new Vector4f();
     private final Vec3f vec3f = new Vec3f();
