@@ -10,32 +10,32 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(BlockInfo.class)
+@Mixin(value = BlockInfo.class, remap = false)
 public abstract class MixinBlockInfo {
-    @Shadow(remap = false)
+    @Shadow
     private BlockPos blockPos;
 
-    @Shadow(remap = false)
+    @Shadow
     private IBlockAccess world;
-    @Shadow(remap = false)
+    @Shadow
     @Final
     private boolean[][][] t;
-    @Shadow(remap = false)
+    @Shadow
     @Final
     private int[][][] s;
-    @Shadow(remap = false)
+    @Shadow
     @Final
     private int[][][] b;
-    @Shadow(remap = false)
+    @Shadow
     @Final
     private float[][][] ao;
-    @Shadow(remap = false)
+    @Shadow
     @Final
     private static EnumFacing[] SIDES;
-    @Shadow(remap = false)
+    @Shadow
     private IBlockState state;
 
-    @Shadow(remap = false)
+    @Shadow
     protected abstract float combine(
         int c,
         int s1,
@@ -47,10 +47,10 @@ public abstract class MixinBlockInfo {
         boolean t3
     );
 
-    @Shadow(remap = false)
+    @Shadow
     @Final
     private float[][][][] skyLight;
-    @Shadow(remap = false)
+    @Shadow
     @Final
     private float[][][][] blockLight;
 
@@ -60,7 +60,7 @@ public abstract class MixinBlockInfo {
      * @author Luna
      * @reason Memory allocation optimization
      */
-    @Overwrite(remap = false)
+    @Overwrite
     public void updateLightMatrix() {
         int basePosX = blockPos.getX() - 1;
         int basePosY = blockPos.getY() - 1;
