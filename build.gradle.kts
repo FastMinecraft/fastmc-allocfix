@@ -1,5 +1,3 @@
-import dev.fastmc.modsetup.minecraftVersion
-import me.luna.jaroptimizer.JarOptimizerPluginExtension
 import kotlin.math.max
 
 group = "dev.fastmc"
@@ -38,8 +36,7 @@ runVmOptions {
 }
 
 plugins {
-    id("me.luna.jaroptimizer").version("1.1")
-    id("dev.fastmc.modsetup.root").version("1.0-SNAPSHOT")
+    id("dev.fastmc.modsetup.root").version("1.1-SNAPSHOT")
 }
 
 subprojects {
@@ -67,14 +64,9 @@ subprojects {
             kotlinOptions {
                 freeCompilerArgs += listOf(
                     "-opt-in=kotlin.RequiresOptIn",
-                    "-opt-in=kotlin.contracts.ExperimentalContracts"
+                    "-opt-in=kotlin.contracts.ExperimentalContracts",
+                    "-Xbackend-threads=0"
                 )
-            }
-        }
-
-        withType<net.fabricmc.loom.task.GenerateSourcesTask> {
-            doFirst {
-                System.setProperty("fabric.loom.genSources.debug", "true")
             }
         }
     }
@@ -82,35 +74,15 @@ subprojects {
 
 tasks {
     val collectJars by register<Copy>("collectJars") {
-        finalizedBy("optimizeJars")
-
         group = "build"
 
-        subprojects.asSequence()
-            .filterNot {
-                it.name.contains("shared")
+        from(
+            provider {
+                subprojects.mapNotNull { it.tasks.findByName("modLoaderJar")?.outputs }
             }
-            .forEach {
-                dependsOn(it.tasks.assemble)
-            }
-
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-
-        subprojects.forEach { project ->
-            val regex =
-                "${rootProject.name}-(?:fabric|forge)-${project.minecraftVersion}-${rootProject.version}-release\\.jar".toRegex()
-            from(file("${project.buildDir}/libs/")) {
-                include {
-                    it.name.matches(regex)
-                }
-            }
-        }
+        )
 
         into(file("$buildDir/libs"))
-    }
-
-    configure<JarOptimizerPluginExtension> {
-        add(collectJars, "dev.fastmc", "org.spongepowered")
     }
 
     assemble {

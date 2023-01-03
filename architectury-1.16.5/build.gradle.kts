@@ -1,4 +1,5 @@
 architecturyProject {
+    modPackage.set("dev.fastmc.allocfix")
     mixinConfig(
         "mixins.fastmc.allocfix.accessor.json",
         "mixins.fastmc.allocfix.main.json"
