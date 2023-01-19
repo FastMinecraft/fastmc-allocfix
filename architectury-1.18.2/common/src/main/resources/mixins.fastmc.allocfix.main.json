@@ -13,7 +13,6 @@
         "MixinNbtCompound",
         "MixinSimpleVoxelShape",
         "MixinSlicedVoxelShape",
-        "MixinSoundExecutor",
         "entity.MixinGoalSelector",
         "render.MixinBackgroundRenderer",
         "render.MixinBillboardParticle",
