@@ -1,6 +1,7 @@
 package dev.fastmc.allocfix.main;
 
 import dev.fastmc.allocfix.AllocationCounter;
+import dev.fastmc.allocfix.FastMcAllocFixMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,5 +21,9 @@ public class MixinMinecraft {
         } else {
             AllocationCounter.INSTANCE.reset();
         }
+    }
+
+    static {
+        FastMcAllocFixMod.INSTANCE.preInit();
     }
 }

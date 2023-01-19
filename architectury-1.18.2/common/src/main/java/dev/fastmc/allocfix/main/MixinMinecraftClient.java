@@ -1,6 +1,7 @@
 package dev.fastmc.allocfix.main;
 
 import dev.fastmc.allocfix.AllocationCounter;
+import dev.fastmc.allocfix.FastMcAllocFixMod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.util.thread.ReentrantThreadExecutor;
@@ -28,5 +29,9 @@ public abstract class MixinMinecraftClient extends ReentrantThreadExecutor<Runna
         } else {
             AllocationCounter.INSTANCE.reset();
         }
+    }
+
+    static {
+        FastMcAllocFixMod.INSTANCE.preInit();
     }
 }
