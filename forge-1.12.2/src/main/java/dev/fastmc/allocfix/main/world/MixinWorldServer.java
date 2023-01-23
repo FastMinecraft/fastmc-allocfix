@@ -1,6 +1,6 @@
 package dev.fastmc.allocfix.main.world;
 
-import dev.fastmc.common.DoubleBufferedCollection;
+import dev.fastmc.common.DoubleBuffered;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.minecraft.block.Block;
@@ -25,8 +25,8 @@ import java.util.List;
 
 @Mixin(WorldServer.class)
 public abstract class MixinWorldServer extends World {
-    private final DoubleBufferedCollection<IntSet> blockEventDataSet = new DoubleBufferedCollection<>(new IntOpenHashSet(), new IntOpenHashSet());
-    private final DoubleBufferedCollection<List<BlockEventData>> blockEventDataList = new DoubleBufferedCollection<>(new ArrayList<>(), new ArrayList<>());
+    private final DoubleBuffered<IntSet> blockEventDataSet = new DoubleBuffered<>(IntOpenHashSet::new, DoubleBuffered.CLEAR_INIT_ACTION);
+    private final DoubleBuffered<List<BlockEventData>> blockEventDataList = new DoubleBuffered<>(ArrayList::new, DoubleBuffered.CLEAR_INIT_ACTION);
     @Shadow
     @Final
     private MinecraftServer server;
@@ -49,10 +49,10 @@ public abstract class MixinWorldServer extends World {
         hash = 31 * hash + eventID;
         hash = 31 * hash + eventParam;
 
-        if (!blockEventDataSet.get().contains(hash)) {
+        if (!blockEventDataSet.getBack().contains(hash)) {
             BlockEventData blockEventData = new BlockEventData(pos, blockIn, eventID, eventParam);
-            blockEventDataList.get().add(blockEventData);
-            blockEventDataSet.get().add(hash);
+            blockEventDataList.getBack().add(blockEventData);
+            blockEventDataSet.getBack().add(hash);
         }
     }
 
@@ -62,10 +62,8 @@ public abstract class MixinWorldServer extends World {
      */
     @Overwrite
     private void sendQueuedBlockEvents() {
-        if (blockEventDataList.get().isEmpty()) return;
-
-        blockEventDataSet.getAndSwap();
-        List<BlockEventData> temp = blockEventDataList.getAndSwap();
+        blockEventDataSet.swap().initBack();
+        List<BlockEventData> temp = blockEventDataList.swap().initBack().getFront();
 
         for (BlockEventData blockEventData : temp) {
             if (this.fireBlockEvent(blockEventData)) {
