@@ -3,7 +3,7 @@ package dev.fastmc.allocfix
 import net.minecraftforge.fml.common.Mod
 
 @Mod("fastmc-allocfix")
-class FastMcEntryPoint {
+class FastMcAllocFixForgeEntryPoint {
     init {
         FastMcAllocFixMod.init()
     }

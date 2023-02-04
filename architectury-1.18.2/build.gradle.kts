@@ -8,5 +8,5 @@ architecturyProject {
 }
 
 modLoader {
-    forgeModClass.set("dev.fastmc.alloc.FastMcForgeEntryPoint")
+    forgeModClass.set("dev.fastmc.allocfix.FastMcAllocFixForgeEntryPoint")
 }

@@ -6,3 +6,7 @@ architecturyProject {
     )
     accessWidenerPath.set(file("common/src/main/resources/fastmc-allocfix.accesswidener").absoluteFile)
 }
+
+modLoader {
+    forgeModClass.set("dev.fastmc.allocfix.FastMcAllocFixForgeEntryPoint")
+}
