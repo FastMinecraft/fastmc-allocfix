@@ -4,21 +4,21 @@ issueTrackerURL = "https://github.com/FastMinecraft/fastmc-allocfix/issues"
 license = "MIT"
 
 [[mods]]
-modId = "fastmc-allocfix"
+modId = "fastmc_allocfix"
 version = "${version}"
 displayName = "Fast Minecraft Allocation Fix"
 authors = "Luna"
 description = "Fixing Mojang's massive amount of memory allocation trolling"
 #logoFile = ""
 
-[[dependencies.fastmc-allocfix]]
+[[dependencies.fastmc_allocfix]]
 modId = "forge"
 mandatory = true
 versionRange = "[40,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.fastmc-allocfix]]
+[[dependencies.fastmc_allocfix]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.18.2,)"
