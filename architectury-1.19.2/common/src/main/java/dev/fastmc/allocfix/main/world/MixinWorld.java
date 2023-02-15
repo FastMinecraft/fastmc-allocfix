@@ -1,0 +1,27 @@
+package dev.fastmc.allocfix.main.world;
+
+import dev.fastmc.allocfix.IPatchedBlockView;
+import dev.fastmc.allocfix.IPatchedBlockView;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.world.chunk.WorldChunk;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+
+@Mixin(World.class)
+public abstract class MixinWorld implements WorldAccess, IPatchedBlockView {
+    @Shadow public abstract WorldChunk getChunk(int par1, int par2);
+
+    @NotNull
+    @Override
+    public BlockState getBlockState(int x, int y, int z) {
+        if (isOutOfHeightLimit(y)) {
+            return Blocks.VOID_AIR.getDefaultState();
+        }
+        WorldChunk worldChunk = this.getChunk(x >> 4, z >> 4);
+        return ((IPatchedBlockView) worldChunk).getBlockState(x, y, z);
+    }
+}
