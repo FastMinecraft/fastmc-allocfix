@@ -1,7 +1,7 @@
 package dev.fastmc.allocfix;
 
 import dev.fastmc.common.BufferUtils;
-import it.unimi.dsi.fastutil.ints.IntArrays;
+import dev.fastmc.common.sort.IntIntrosort;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -30,7 +30,6 @@ public final class QuadSort {
         helper.ensureCapacity(quadCount);
         float[] distanceArray = helper.getDistanceArray();
         int[] sortArray = helper.getSortArray();
-        int[] sortSuppArray = helper.getSortSuppArray();
 
         for (int i = 0; i < quadCount; ++i) {
             distanceArray[i] = getDistanceSq(
@@ -42,10 +41,9 @@ public final class QuadSort {
                 bufferOffset + i * quadByteSize
             );
             sortArray[i] = i;
-            sortSuppArray[i] = i;
         }
 
-        IntArrays.mergeSort(sortArray, 0, quadCount, helper, sortSuppArray);
+        IntIntrosort.sort(sortArray, 0, quadCount, helper.getDistanceArray());
 
         if (tempBuffer == null || tempBuffer.capacity() < quadByteSize) {
             tempBuffer = BufferUtils.allocateByte(quadByteSize);

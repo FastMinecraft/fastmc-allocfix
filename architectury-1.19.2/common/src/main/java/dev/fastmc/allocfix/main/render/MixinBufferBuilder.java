@@ -3,7 +3,7 @@ package dev.fastmc.allocfix.main.render;
 import dev.fastmc.allocfix.IPatchedBufferBuilder;
 import dev.fastmc.allocfix.IPatchedBufferBuilderState;
 import dev.fastmc.allocfix.PrimitiveSortHelper;
-import it.unimi.dsi.fastutil.ints.IntArrays;
+import dev.fastmc.common.sort.IntIntrosort;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.util.math.MathHelper;
@@ -124,7 +124,6 @@ public abstract class MixinBufferBuilder implements IPatchedBufferBuilder {
         helper.ensureCapacity(primitiveCount);
         float[] distanceArray = helper.getDistanceArray();
         int[] sortArray = helper.getSortArray();
-        int[] sortSuppArray = helper.getSortSuppArray();
 
         for (int i = 0; i < primitiveCount; ++i) {
             int index = i * 3;
@@ -133,9 +132,9 @@ public abstract class MixinBufferBuilder implements IPatchedBufferBuilder {
             float dz = this.primitiveCenters[index + 2] - this.sortingCameraZ;
             distanceArray[i] = dx * dx + dy * dy + dz * dz;
             sortArray[i] = i;
-            sortSuppArray[i] = i;
         }
-        IntArrays.mergeSort(sortArray, 0, primitiveCount, helper, sortSuppArray);
+
+        IntIntrosort.sort(sortArray, 0, primitiveCount, helper.getDistanceArray());
 
         int prevPosition = this.buffer.position();
         this.buffer.position(this.elementOffset);

@@ -5,7 +5,7 @@ import dev.fastmc.allocfix.IPatchedBufferBuilder;
 import dev.fastmc.allocfix.IPatchedBufferBuilderState;
 import dev.fastmc.allocfix.PrimitiveSortHelper;
 import dev.fastmc.common.BufferUtils;
-import it.unimi.dsi.fastutil.ints.IntArrays;
+import dev.fastmc.common.sort.IntIntrosort;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.VertexFormat;
@@ -190,7 +190,6 @@ public abstract class MixinBufferBuilder implements IPatchedBufferBuilder {
         helper.ensureCapacity(primitiveCount);
         float[] distanceArray = helper.getDistanceArray();
         int[] sortArray = helper.getSortArray();
-        int[] sortSuppArray = helper.getSortSuppArray();
 
         for (int i = 0; i < primitiveCount; ++i) {
             int index = i * 3;
@@ -199,43 +198,45 @@ public abstract class MixinBufferBuilder implements IPatchedBufferBuilder {
             float dz = this.primitiveCenters[index + 2] - this.sortingCameraZ;
             distanceArray[i] = dx * dx + dy * dy + dz * dz;
             sortArray[i] = i;
-            sortSuppArray[i] = i;
         }
-        IntArrays.mergeSort(sortArray, 0, primitiveCount, helper, sortSuppArray);
+
+        IntIntrosort.sort(sortArray, 0, primitiveCount, helper.getDistanceArray());
 
         this.buffer.position(this.elementOffset);
+        int drawModeSize = this.drawMode.size;
+
         switch (type) {
             case BYTE -> {
                 for (int i = 0; i < primitiveCount; ++i) {
-                    int index = sortArray[i];
-                    buffer.put((byte) (index * this.drawMode.size));
-                    buffer.put((byte) (index * this.drawMode.size + 1));
-                    buffer.put((byte) (index * this.drawMode.size + 2));
-                    buffer.put((byte) (index * this.drawMode.size + 2));
-                    buffer.put((byte) (index * this.drawMode.size + 3));
-                    buffer.put((byte) (index * this.drawMode.size));
+                    int index = sortArray[i] * drawModeSize;
+                    buffer.put((byte) (index));
+                    buffer.put((byte) (index + 1));
+                    buffer.put((byte) (index + 2));
+                    buffer.put((byte) (index + 2));
+                    buffer.put((byte) (index + 3));
+                    buffer.put((byte) (index));
                 }
             }
             case SHORT -> {
                 for (int i = 0; i < primitiveCount; ++i) {
-                    int index = sortArray[i];
-                    buffer.putShort((short) (index * this.drawMode.size));
-                    buffer.putShort((short) (index * this.drawMode.size + 1));
-                    buffer.putShort((short) (index * this.drawMode.size + 2));
-                    buffer.putShort((short) (index * this.drawMode.size + 2));
-                    buffer.putShort((short) (index * this.drawMode.size + 3));
-                    buffer.putShort((short) (index * this.drawMode.size));
+                    int index = sortArray[i] * drawModeSize;
+                    buffer.putShort((short) (index));
+                    buffer.putShort((short) (index + 1));
+                    buffer.putShort((short) (index + 2));
+                    buffer.putShort((short) (index + 2));
+                    buffer.putShort((short) (index + 3));
+                    buffer.putShort((short) (index));
                 }
             }
             default -> {
                 for (int i = 0; i < primitiveCount; ++i) {
-                    int index = sortArray[i];
-                    buffer.putInt(index * this.drawMode.size);
-                    buffer.putInt(index * this.drawMode.size + 1);
-                    buffer.putInt(index * this.drawMode.size + 2);
-                    buffer.putInt(index * this.drawMode.size + 2);
-                    buffer.putInt(index * this.drawMode.size + 3);
-                    buffer.putInt(index * this.drawMode.size);
+                    int index = sortArray[i] * drawModeSize;
+                    buffer.putInt(index);
+                    buffer.putInt(index + 1);
+                    buffer.putInt(index + 2);
+                    buffer.putInt(index + 2);
+                    buffer.putInt(index + 3);
+                    buffer.putInt(index);
                 }
             }
         }
