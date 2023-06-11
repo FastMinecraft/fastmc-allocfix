@@ -49,7 +49,7 @@ public class MixinTextFormatting {
                     case 'n':
                     case 'm':
                     case 'r':
-                        i += 2;
+                        i += 1;
                         continue;
                     default:
                         break;
