@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(value = ForgeHooksClient.class, remap = false)
@@ -38,6 +37,7 @@ public abstract class MixinForgeHooksClient {
     }
 
     private static final FastObjectArrayList<BakedQuad> QUADS_LIST = new FastObjectArrayList<>();
+    private static final FastObjectArrayList<BakedQuad> SEGMENT_LIST = new FastObjectArrayList<>();
 
     /**
      * @author Luna
@@ -57,7 +57,8 @@ public abstract class MixinForgeHooksClient {
         if (quadsList.isEmpty()) return;
 
         // Current list of consecutive quads with the same lighting
-        List<BakedQuad> segment = new ArrayList<>();
+        FastObjectArrayList<BakedQuad> segment = SEGMENT_LIST;
+        segment.clearFast();
 
         // Lighting of the current segment
         int segmentBlockLight = 0;
