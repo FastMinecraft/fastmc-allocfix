@@ -1,6 +1,6 @@
 package dev.fastmc.allocfix.main.render;
 
-import dev.fastmc.allocfix.accessor.AccessorLightGatheringTransformer;
+import dev.fastmc.allocfix.LightGatheringFastMc;
 import dev.fastmc.common.collection.FastObjectArrayList;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -11,8 +11,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.pipeline.IVertexConsumer;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,12 +21,9 @@ import java.util.List;
 @Mixin(value = ForgeHooksClient.class, remap = false)
 public abstract class MixinForgeHooksClient {
 
+    private static final LightGatheringFastMc LIGHT_GATHERING = new LightGatheringFastMc();
 
-    @Shadow
-    @Final
-    private static IVertexConsumer lightGatherer;
-
-    @Shadow
+    @Shadow(remap = false)
     private static void drawSegment(
         RenderItem ri,
         int baseColor,
@@ -48,7 +43,7 @@ public abstract class MixinForgeHooksClient {
      * @author Luna
      * @reason Memory allocation optimization
      */
-    @Overwrite
+    @Overwrite(remap = false)
     public static void renderLitItem(RenderItem ri, IBakedModel model, int color, ItemStack stack) {
         FastObjectArrayList<BakedQuad> quadsList = QUADS_LIST;
         quadsList.clearFast();
@@ -84,11 +79,10 @@ public abstract class MixinForgeHooksClient {
 
             // Fail-fast on ITEM, as it cannot have light data
             if (q.getFormat() != DefaultVertexFormats.ITEM && q.getFormat().hasUvOffset(1)) {
-                AccessorLightGatheringTransformer lightGathererAccessor = (AccessorLightGatheringTransformer) MixinForgeHooksClient.lightGatherer;
-                q.pipe(lightGatherer);
-                if (lightGathererAccessor.callHasLighting()) {
-                    bl = lightGathererAccessor.getBlockLight();
-                    sl = lightGathererAccessor.getSkyLight();
+                q.pipe(LIGHT_GATHERING);
+                if (LIGHT_GATHERING.hasLighting()) {
+                    bl = LIGHT_GATHERING.blockLight;
+                    sl = LIGHT_GATHERING.skyLight;
                 }
             }
 

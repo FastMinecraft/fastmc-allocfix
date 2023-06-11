@@ -24,7 +24,7 @@ public class MixinForgeBlockModelRenderer {
      * @reason Memory allocation optimization
      */
     @SuppressWarnings("ForLoopReplaceableByForEach")
-    @Overwrite
+    @Overwrite(remap = false)
     public static boolean render(
         VertexLighterFlat lighter,
         IBlockAccess world,
