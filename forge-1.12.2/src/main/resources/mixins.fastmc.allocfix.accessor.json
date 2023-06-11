@@ -9,6 +9,7 @@
     "client": [
         "AccessorChunkRenderWorker",
         "AccessorContainerLocalRenderInformation",
+        "AccessorLightGatheringTransformer",
         "AccessorPendingUpload"
     ]
 }
