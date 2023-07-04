@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BlockFluidRenderer.class)
 public class MixinBlockFluidRenderer {
@@ -46,337 +47,346 @@ public class MixinBlockFluidRenderer {
         BlockPos pos,
         BufferBuilder bufferBuilder
     ) {
-        IPatchedIBlockAccess patched = (IPatchedIBlockAccess) blockAccess;
 
-        BlockLiquid blockLiquid = (BlockLiquid) blockState.getBlock();
-        boolean isLava = blockState.getMaterial() == Material.LAVA;
-        TextureAtlasSprite[] sprites = isLava ? this.atlasSpritesLava : this.atlasSpritesWater;
-
-        int color = this.blockColors.colorMultiplier(blockState, blockAccess, pos, 0);
-        float red = (float) (color >> 16 & 255) / 255.0F;
-        float green = (float) (color >> 8 & 255) / 255.0F;
-        float blue = (float) (color & 255) / 255.0F;
-
-        boolean renderUp = blockState.shouldSideBeRendered(blockAccess, pos, EnumFacing.UP);
-        boolean renderDown = blockState.shouldSideBeRendered(blockAccess, pos, EnumFacing.DOWN);
-        
+        boolean renderD = blockState.shouldSideBeRendered(blockAccess, pos, EnumFacing.DOWN);
+        boolean renderU = blockState.shouldSideBeRendered(blockAccess, pos, EnumFacing.UP);
         boolean renderN = blockState.shouldSideBeRendered(blockAccess, pos, EnumFacing.NORTH);
         boolean renderS = blockState.shouldSideBeRendered(blockAccess, pos, EnumFacing.SOUTH);
         boolean renderW = blockState.shouldSideBeRendered(blockAccess, pos, EnumFacing.WEST);
         boolean renderE = blockState.shouldSideBeRendered(blockAccess, pos, EnumFacing.EAST);
 
-        if (!renderUp && !renderDown && !renderN && !renderS && !renderW && !renderE) {
-            return false;
-        } else {
-            Material material = blockState.getMaterial();
+        if (!renderD && !renderU && !renderN && !renderS && !renderW && !renderE) return false;
 
-            int blockX = pos.getX();
-            int blockY = pos.getY();
-            int blockZ = pos.getZ();
+        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+        IPatchedIBlockAccess patched = (IPatchedIBlockAccess) blockAccess;
 
-            float height = this.getFluidHeight(patched, blockX, blockY, blockZ, material);
-            float heightS = this.getFluidHeight(patched, blockX, blockY, blockZ + 1, material);
-            float heightES = this.getFluidHeight(patched, blockX + 1, blockY, blockZ + 1, material);
-            float heightE = this.getFluidHeight(patched, blockX + 1, blockY, blockZ, material);
+        BlockLiquid blockLiquid = (BlockLiquid) blockState.getBlock();
+        Material material = blockState.getMaterial();
 
-            boolean rendered = false;
-            
-            if (renderUp) {
-                rendered = true;
-                float f12 = BlockLiquid.getSlopeAngle(blockAccess, pos, material, blockState);
-                TextureAtlasSprite textureatlassprite = f12 > -999.0F ? sprites[1] : sprites[0];
-                
-                height -= 0.001F;
-                heightS -= 0.001F;
-                heightES -= 0.001F;
-                heightE -= 0.001F;
-                
-                float u1;
-                float u2;
-                float u3;
-                float u4;
-                float v1;
-                float v2;
-                float v3;
-                float v4;
+        boolean isLava = material == Material.LAVA;
+        TextureAtlasSprite[] sprites = isLava ? this.atlasSpritesLava : this.atlasSpritesWater;
 
-                if (f12 < -999.0F) {
-                    u1 = textureatlassprite.getInterpolatedU(0.0D);
-                    v1 = textureatlassprite.getInterpolatedV(0.0D);
-                    u2 = u1;
-                    v2 = textureatlassprite.getInterpolatedV(16.0D);
-                    u3 = textureatlassprite.getInterpolatedU(16.0D);
-                    v3 = v2;
-                    u4 = u3;
-                    v4 = v1;
-                } else {
-                    float f21 = MathHelper.sin(f12) * 0.25F;
-                    float f22 = MathHelper.cos(f12) * 0.25F;
-                    u1 = textureatlassprite.getInterpolatedU((8.0F + (-f22 - f21) * 16.0F));
-                    v1 = textureatlassprite.getInterpolatedV((8.0F + (-f22 + f21) * 16.0F));
-                    u2 = textureatlassprite.getInterpolatedU((8.0F + (-f22 + f21) * 16.0F));
-                    v2 = textureatlassprite.getInterpolatedV((8.0F + (f22 + f21) * 16.0F));
-                    u3 = textureatlassprite.getInterpolatedU((8.0F + (f22 + f21) * 16.0F));
-                    v3 = textureatlassprite.getInterpolatedV((8.0F + (f22 - f21) * 16.0F));
-                    u4 = textureatlassprite.getInterpolatedU((8.0F + (f22 - f21) * 16.0F));
-                    v4 = textureatlassprite.getInterpolatedV((8.0F + (-f22 - f21) * 16.0F));
-                }
+        int color = this.blockColors.colorMultiplier(blockState, blockAccess, pos, 0);
+        float red = (float) (color >> 16 & 255) / 255.0f;
+        float green = (float) (color >> 8 & 255) / 255.0f;
+        float blue = (float) (color & 255) / 255.0f;
 
-                int k2 = blockState.getPackedLightmapCoords(blockAccess, pos);
-                int l2 = k2 >> 16 & 65535;
-                int i3 = k2 & 65535;
+        int blockX = pos.getX();
+        int blockY = pos.getY();
+        int blockZ = pos.getZ();
 
-                quad(
+        float heightNW = this.fastmc_allocfix$getFluidHeight(patched, blockX, blockY, blockZ, material);
+        float heightSW = this.fastmc_allocfix$getFluidHeight(patched, blockX, blockY, blockZ + 1, material);
+        float heightNE = this.fastmc_allocfix$getFluidHeight(patched, blockX + 1, blockY, blockZ, material);
+        float heightSE = this.fastmc_allocfix$getFluidHeight(patched, blockX + 1, blockY, blockZ + 1, material);
+
+        int light = blockState.getPackedLightmapCoords(blockAccess, pos);
+
+        if (renderU) {
+            float flowAngle = BlockLiquid.getSlopeAngle(blockAccess, pos, material, blockState);
+
+            heightNW -= 0.001;
+            heightSW -= 0.001;
+            heightSE -= 0.001;
+            heightNE -= 0.001;
+
+            float uNW;
+            float uSW;
+            float uSE;
+            float uNE;
+
+            float vNW;
+            float vSW;
+            float vSE;
+            float vNE;
+
+            if (flowAngle < -999.0f) {
+                TextureAtlasSprite sprite = sprites[0];
+
+                uNW = sprite.getInterpolatedU(0.0);
+                uSW = uNW;
+                uSE = sprite.getInterpolatedU(16.0);
+                uNE = uSE;
+
+                vNW = sprite.getInterpolatedV(0.0);
+                vNE = vNW;
+                vSW = sprite.getInterpolatedV(16.0);
+                vSE = vSW;
+            } else {
+                TextureAtlasSprite sprite = sprites[1];
+                float flowX = MathHelper.sin(flowAngle) * 0.25f;
+                float flowZ = MathHelper.cos(flowAngle) * 0.25f;
+
+                uNW = sprite.getInterpolatedU((8.0f + (-flowZ - flowX) * 16.0f));
+                uSW = sprite.getInterpolatedU((8.0f + (-flowZ + flowX) * 16.0f));
+                uSE = sprite.getInterpolatedU((8.0f + (flowZ + flowX) * 16.0f));
+                uNE = sprite.getInterpolatedU((8.0f + (flowZ - flowX) * 16.0f));
+
+                vNW = sprite.getInterpolatedV((8.0f + (-flowZ + flowX) * 16.0f));
+                vSW = sprite.getInterpolatedV((8.0f + (flowZ + flowX) * 16.0f));
+                vSE = sprite.getInterpolatedV((8.0f + (flowZ - flowX) * 16.0f));
+                vNE = sprite.getInterpolatedV((8.0f + (-flowZ - flowX) * 16.0f));
+            }
+
+            fastmc_allocfix$quad(
+                bufferBuilder,
+                blockX + 0.0,
+                blockX + 0.0,
+                blockX + 1.0,
+                blockX + 1.0,
+                blockY + heightNW,
+                blockY + heightSW,
+                blockY + heightSE,
+                blockY + heightNE,
+                blockZ + 0.0,
+                blockZ + 1.0,
+                blockZ + 1.0,
+                blockZ + 0.0,
+                uNW,
+                uSW,
+                uSE,
+                uNE,
+                vNW,
+                vSW,
+                vSE,
+                vNE,
+                red,
+                green,
+                blue,
+                light
+            );
+
+            if (blockLiquid.shouldRenderSides(blockAccess, mutablePos.setPos(pos).move(EnumFacing.UP))) {
+                fastmc_allocfix$quad(
                     bufferBuilder,
-                    (double) blockX + 0.0D,
-                    (double) blockX + 0.0D,
-                    (double) blockX + 1.0D,
-                    (double) blockX + 1.0D,
-                    (double) blockY + height,
-                    (double) blockY + heightS,
-                    (double) blockY + heightES,
-                    (double) blockY + heightE,
-                    (double) blockZ + 0.0D,
-                    (double) blockZ + 1.0D,
-                    u1,
-                    u2,
-                    u3,
-                    u4,
-                    v1,
-                    v2,
-                    v3,
-                    v4,
+                    blockX + 0.0,
+                    blockX + 1.0,
+                    blockX + 1.0,
+                    blockX + 0.0,
+                    blockY + heightNW,
+                    blockY + heightNE,
+                    blockY + heightSE,
+                    blockY + heightSW,
+                    blockZ + 0.0,
+                    blockZ + 0.0,
+                    blockZ + 1.0,
+                    blockZ + 1.0,
+                    uNW,
+                    uNE,
+                    uSE,
+                    uSW,
+                    vNW,
+                    vNE,
+                    vSE,
+                    vSW,
                     red,
                     green,
                     blue,
-                    l2,
-                    i3
+                    light
                 );
-
-                if (blockLiquid.shouldRenderSides(blockAccess, pos.up())) {
-                    quad(
-                        bufferBuilder,
-                        (double) blockX + 0.0D,
-                        (double) blockX + 1.0D,
-                        (double) blockX + 1.0D,
-                        (double) blockX + 0.0D,
-                        (double) blockY + height,
-                        (double) blockY + heightE,
-                        (double) blockY + heightES,
-                        (double) blockY + heightS,
-                        (double) blockZ + 0.0D,
-                        (double) blockZ + 0.0D,
-                        u1,
-                        u4,
-                        u3,
-                        u2,
-                        v1,
-                        v4,
-                        v3,
-                        v2,
-                        red,
-                        green,
-                        blue,
-                        l2,
-                        i3
-                    );
-                }
             }
-
-            if (renderDown) {
-                float downU1 = sprites[0].getMinU();
-                float f36 = sprites[0].getMaxU();
-                float f37 = sprites[0].getMinV();
-                float f38 = sprites[0].getMaxV();
-                int l1 = blockState.getPackedLightmapCoords(blockAccess, pos.down());
-                int i2 = l1 >> 16 & 65535;
-                int j2 = l1 & 65535;
-                quad(
-                    bufferBuilder,
-                    blockX,
-                    blockX,
-                    (double) blockX + 1.0D,
-                    (double) blockX + 1.0D,
-                    blockY,
-                    blockY,
-                    blockY,
-                    blockY,
-                    (double) blockZ + 1.0D,
-                    blockZ,
-                    downU1,
-                    downU1,
-                    f36,
-                    f36,
-                    f38,
-                    f37,
-                    f37,
-                    f38,
-                    0.5F,
-                    0.5F,
-                    0.5F,
-                    i2,
-                    j2
-                );
-                rendered = true;
-            }
-
-            BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
-
-            for (int i = 0; i < 4; ++i) {
-                int xOffset = 0;
-                int zOffset = 0;
-                
-                boolean renderCorner = false;
-
-                switch (i) {
-                    case 0:
-                        --zOffset;
-                        renderCorner = renderN;
-                        break;
-                    case 1:
-                        ++zOffset;
-                        renderCorner = renderN;
-                        break;
-                    case 2:
-                        --xOffset;
-                        renderCorner = renderN;
-                        break;
-                    case 3:
-                        ++xOffset;
-                        renderCorner = renderN;
-                        break;
-                }
-                
-
-                mutablePos.setPos(blockX + xOffset, blockY, blockZ + zOffset);
-                TextureAtlasSprite sprite = sprites[1];
-
-                if (!isLava) {
-                    IBlockState state = blockAccess.getBlockState(mutablePos);
-
-                    if (state.getBlockFaceShape(
-                        blockAccess,
-                        mutablePos,
-                        EnumFacing.VALUES[i + 2].getOpposite()
-                    ) == BlockFaceShape.SOLID) {
-                        sprite = this.atlasSpriteWaterOverlay;
-                    }
-                }
-
-                if (renderCorner) {
-                    float yOffset1;
-                    float yOffset2;
-                    double d3;
-                    double d4;
-                    double d5;
-                    double d6;
-
-                    if (i == 0) {
-                        yOffset1 = height;
-                        yOffset2 = heightE;
-                        d3 = blockX;
-                        d5 = (double) blockX + 1.0D;
-                        d4 = (double) blockZ + 0.0010000000474974513D;
-                        d6 = (double) blockZ + 0.0010000000474974513D;
-                    } else if (i == 1) {
-                        yOffset1 = heightES;
-                        yOffset2 = heightS;
-                        d3 = (double) blockX + 1.0D;
-                        d5 = blockX;
-                        d4 = (double) blockZ + 1.0D - 0.0010000000474974513D;
-                        d6 = (double) blockZ + 1.0D - 0.0010000000474974513D;
-                    } else if (i == 2) {
-                        yOffset1 = heightS;
-                        yOffset2 = height;
-                        d3 = (double) blockX + 0.0010000000474974513D;
-                        d5 = (double) blockX + 0.0010000000474974513D;
-                        d4 = (double) blockZ + 1.0D;
-                        d6 = blockZ;
-                    } else {
-                        yOffset1 = heightE;
-                        yOffset2 = heightES;
-                        d3 = (double) blockX + 1.0D - 0.0010000000474974513D;
-                        d5 = (double) blockX + 1.0D - 0.0010000000474974513D;
-                        d4 = blockZ;
-                        d6 = (double) blockZ + 1.0D;
-                    }
-
-                    rendered = true;
-                    float u1 = sprite.getInterpolatedU(0.0D);
-                    float u2 = sprite.getInterpolatedU(8.0D);
-                    float f28 = sprite.getInterpolatedV(((1.0F - yOffset1) * 16.0F * 0.5F));
-                    float f29 = sprite.getInterpolatedV(((1.0F - yOffset2) * 16.0F * 0.5F));
-                    float f30 = sprite.getInterpolatedV(8.0D);
-                    int j = blockState.getPackedLightmapCoords(blockAccess, mutablePos);
-                    int k = j >> 16 & 65535;
-                    int l = j & 65535;
-                    float f31 = i < 2 ? 0.8F : 0.6F;
-                    float f32 = 1.0F * f31 * red;
-                    float f33 = 1.0F * f31 * green;
-                    float f34 = 1.0F * f31 * blue;
-                    quad(
-                        bufferBuilder,
-                        d3,
-                        d5,
-                        d5,
-                        d3,
-                        (double) blockY + yOffset1,
-                        (double) blockY + yOffset2,
-                        (double) blockY + 0.0D,
-                        (double) blockY + 0.0D,
-                        d4,
-                        d6,
-                        u1,
-                        u2,
-                        u2,
-                        u1,
-                        f28,
-                        f29,
-                        f30,
-                        f30,
-                        f32,
-                        f33,
-                        f34,
-                        k,
-                        l
-                    );
-
-                    if (sprite != this.atlasSpriteWaterOverlay) {
-                        quad(
-                            bufferBuilder,
-                            d3,
-                            d5,
-                            d5,
-                            d3,
-                            (double) blockY + 0.0D,
-                            (double) blockY + 0.0D,
-                            (double) blockY + yOffset2,
-                            (double) blockY + yOffset1,
-                            d4,
-                            d6,
-                            u1,
-                            u2,
-                            u2,
-                            u1,
-                            f30,
-                            f30,
-                            f29,
-                            f28,
-                            f32,
-                            f33,
-                            f34,
-                            k,
-                            l
-                        );
-                    }
-                }
-            }
-
-            return rendered;
         }
+
+        if (renderD) {
+            float u1 = sprites[0].getMinU();
+            float u2 = sprites[0].getMaxU();
+            float v1 = sprites[0].getMinV();
+            float v2 = sprites[0].getMaxV();
+            int lightD = blockState.getPackedLightmapCoords(blockAccess, mutablePos.setPos(pos).move(EnumFacing.DOWN));
+
+            fastmc_allocfix$quad(
+                bufferBuilder,
+                blockX,
+                blockX,
+                blockX + 1.0,
+                blockX + 1.0,
+                blockY,
+                blockY,
+                blockY,
+                blockY,
+                blockZ + 1.0,
+                blockZ,
+                blockZ,
+                blockZ + 1.0,
+                u1,
+                u1,
+                u2,
+                u2,
+                v2,
+                v1,
+                v1,
+                v2,
+                0.5f,
+                0.5f,
+                0.5f,
+                lightD
+            );
+        }
+
+        for (int i = 0; i < 4; ++i) {
+            boolean renderSide;
+
+            switch (i) {
+                case 0:
+                    renderSide = renderN;
+                    break;
+                case 1:
+                    renderSide = renderS;
+                    break;
+                case 2:
+                    renderSide = renderW;
+                    break;
+                default:
+                    renderSide = renderE;
+                    break;
+            }
+
+            if (!renderSide) continue;
+
+            EnumFacing direction;
+
+            float y11;
+            float y12;
+            double x1;
+            double z1;
+            double x2;
+            double z2;
+
+            switch (i) {
+                case 0:
+                    direction = EnumFacing.NORTH;
+
+                    y11 = heightNW;
+                    y12 = heightNE;
+
+                    x1 = blockX + 0.0;
+                    x2 = blockX + 1.0;
+                    z1 = blockZ + 0.001;
+                    z2 = blockZ + 0.001;
+                    break;
+                case 1:
+                    direction = EnumFacing.SOUTH;
+
+                    y11 = heightSE;
+                    y12 = heightSW;
+
+                    x1 = blockX + 1.0;
+                    x2 = blockX + 0.0;
+                    z1 = blockZ + 1.0 - 0.001;
+                    z2 = blockZ + 1.0 - 0.001;
+                    break;
+                case 2:
+                    direction = EnumFacing.WEST;
+
+                    y11 = heightSW;
+                    y12 = heightNW;
+
+                    x1 = blockX + 0.001;
+                    x2 = blockX + 0.001;
+                    z1 = blockZ + 1.0;
+                    z2 = blockZ + 0.0;
+                    break;
+                default:
+                    direction = EnumFacing.EAST;
+
+                    y11 = heightNE;
+                    y12 = heightSE;
+
+                    x1 = blockX + 1.0 - 0.001;
+                    x2 = blockX + 1.0 - 0.001;
+                    z1 = blockZ + 0.0;
+                    z2 = blockZ + 1.0;
+                    break;
+            }
+
+            TextureAtlasSprite sprite = sprites[1];
+
+            if (!isLava) {
+                mutablePos.setPos(pos).move(direction);
+                IBlockState offsetState = blockAccess.getBlockState(mutablePos);
+
+                if (offsetState.getBlockFaceShape(blockAccess, mutablePos, EnumFacing.VALUES[i + 2].getOpposite())
+                    == BlockFaceShape.SOLID) {
+                    sprite = this.atlasSpriteWaterOverlay;
+                }
+            }
+
+            float uN = sprite.getInterpolatedU(0.0);
+            float uS = sprite.getInterpolatedU(8.0);
+
+            float vFrom1 = sprite.getInterpolatedV((1.0f - y11) * 16.0f * 0.5f);
+            float vFrom2 = sprite.getInterpolatedV((1.0f - y12) * 16.0f * 0.5f);
+            float vTo = sprite.getInterpolatedV(8.0);
+
+            float shade = i < 2 ? 0.8f : 0.6f;
+            float sideR = shade * red;
+            float sideG = shade * green;
+            float sideB = shade * blue;
+
+            fastmc_allocfix$quad(
+                bufferBuilder,
+                x1,
+                x2,
+                x2,
+                x1,
+                blockY + y11,
+                blockY + y12,
+                blockY,
+                blockY,
+                z1,
+                z2,
+                z2,
+                z1,
+                uN,
+                uS,
+                uS,
+                uN,
+                vFrom1,
+                vFrom2,
+                vTo,
+                vTo,
+                sideR,
+                sideG,
+                sideB,
+                light
+            );
+
+            if (sprite != this.atlasSpriteWaterOverlay) {
+                fastmc_allocfix$quad(
+                    bufferBuilder,
+                    x1,
+                    x2,
+                    x2,
+                    x1,
+                    blockY,
+                    blockY,
+                    blockY + y12,
+                    blockY + y11,
+                    z1,
+                    z2,
+                    z2,
+                    z1,
+                    uN,
+                    uS,
+                    uS,
+                    uN,
+                    vTo,
+                    vTo,
+                    vFrom2,
+                    vFrom1,
+                    sideR,
+                    sideG,
+                    sideB,
+                    light
+                );
+            }
+        }
+
+        return true;
     }
 
-    private static void quad(
+    @Unique
+    private static void fastmc_allocfix$quad(
         BufferBuilder bufferBuilder,
         double x1,
         double x2,
@@ -388,6 +398,8 @@ public class MixinBlockFluidRenderer {
         double y4,
         double z1,
         double z2,
+        double z3,
+        double z4,
         float u1,
         float u2,
         float u3,
@@ -399,38 +411,47 @@ public class MixinBlockFluidRenderer {
         float red,
         float green,
         float blue,
-        int skyLight,
-        int blockLight
+        int light
     ) {
+        int skyLight = light >> 16 & 0xFFFF;
+        int blockLight = light & 0xFFFF;
+
         bufferBuilder.pos(x1, y1, z1)
-            .color(red, green, blue, 1.0F)
+            .color(red, green, blue, 1.0f)
             .tex(u1, v1)
             .lightmap(skyLight, blockLight)
             .endVertex();
 
         bufferBuilder.pos(x2, y2, z2)
-            .color(red, green, blue, 1.0F)
+            .color(red, green, blue, 1.0f)
             .tex(u2, v2)
             .lightmap(skyLight, blockLight)
             .endVertex();
 
-        bufferBuilder.pos(x3, y3, z2)
-            .color(red, green, blue, 1.0F)
+        bufferBuilder.pos(x3, y3, z3)
+            .color(red, green, blue, 1.0f)
             .tex(u3, v3)
             .lightmap(skyLight, blockLight)
             .endVertex();
 
-        bufferBuilder.pos(x4, y4, z1)
-            .color(red, green, blue, 1.0F)
+        bufferBuilder.pos(x4, y4, z4)
+            .color(red, green, blue, 1.0f)
             .tex(u4, v4)
             .lightmap(skyLight, blockLight)
             .endVertex();
     }
 
 
-    private float getFluidHeight(IPatchedIBlockAccess patched, int x, int y, int z, Material blockMaterial) {
+    @Unique
+    private float fastmc_allocfix$getFluidHeight(
+        IPatchedIBlockAccess patched,
+        int x,
+        int y,
+        int z,
+        Material blockMaterial
+    ) {
         int i = 0;
-        float f = 0.0F;
+        float f = 0.0f;
 
         for (int j = 0; j < 4; ++j) {
             int x1 = x - (j & 1);
@@ -458,6 +479,6 @@ public class MixinBlockFluidRenderer {
             }
         }
 
-        return 1.0F - f / (float) i;
+        return 1.0f - f / (float) i;
     }
 }
