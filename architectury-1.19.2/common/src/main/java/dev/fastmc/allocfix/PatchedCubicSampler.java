@@ -1,15 +1,15 @@
 package dev.fastmc.allocfix;
 
-import dev.fastmc.common.MathUtilsKt;
+import dev.fastmc.common.MathUtilKt;
 import net.minecraft.util.math.MathHelper;
 
 public class PatchedCubicSampler {
     private static final float[] DENSITY_CURVE = new float[]{ 0.0f, 1.0f, 4.0f, 6.0f, 4.0f, 1.0f, 0.0f };
 
     public static int sampleColor(double x, double y, double z, RgbFetcher rgbFetcher) {
-        int intX = MathUtilsKt.floorToInt(x);
-        int intY = MathUtilsKt.floorToInt(y);
-        int intZ = MathUtilsKt.floorToInt(z);
+        int intX = MathUtilKt.floorToInt(x);
+        int intY = MathUtilKt.floorToInt(y);
+        int intZ = MathUtilKt.floorToInt(z);
         float dx = (float) (x - intX);
         float dy = (float) (y - intY);
         float dz = (float) (z - intZ);
