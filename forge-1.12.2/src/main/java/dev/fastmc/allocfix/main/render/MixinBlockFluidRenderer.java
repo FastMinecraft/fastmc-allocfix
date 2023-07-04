@@ -80,8 +80,6 @@ public class MixinBlockFluidRenderer {
         float heightNE = this.fastmc_allocfix$getFluidHeight(patched, blockX + 1, blockY, blockZ, material);
         float heightSE = this.fastmc_allocfix$getFluidHeight(patched, blockX + 1, blockY, blockZ + 1, material);
 
-        int light = blockState.getPackedLightmapCoords(blockAccess, pos);
-
         if (renderU) {
             float flowAngle = BlockLiquid.getSlopeAngle(blockAccess, pos, material, blockState);
 
@@ -128,6 +126,8 @@ public class MixinBlockFluidRenderer {
                 vNE = sprite.getInterpolatedV((8.0f + (-flowZ - flowX) * 16.0f));
             }
 
+            int lightUp = blockState.getPackedLightmapCoords(blockAccess, pos);
+
             fastmc_allocfix$quad(
                 bufferBuilder,
                 blockX + 0.0,
@@ -153,7 +153,7 @@ public class MixinBlockFluidRenderer {
                 red,
                 green,
                 blue,
-                light
+                lightUp
             );
 
             if (blockLiquid.shouldRenderSides(blockAccess, mutablePos.setPos(pos).move(EnumFacing.UP))) {
@@ -182,7 +182,7 @@ public class MixinBlockFluidRenderer {
                     red,
                     green,
                     blue,
-                    light
+                    lightUp
                 );
             }
         }
@@ -192,7 +192,7 @@ public class MixinBlockFluidRenderer {
             float u2 = sprites[0].getMaxU();
             float v1 = sprites[0].getMinV();
             float v2 = sprites[0].getMaxV();
-            int lightD = blockState.getPackedLightmapCoords(blockAccess, mutablePos.setPos(pos).move(EnumFacing.DOWN));
+            int lightDown = blockState.getPackedLightmapCoords(blockAccess, mutablePos.setPos(pos).move(EnumFacing.DOWN));
 
             fastmc_allocfix$quad(
                 bufferBuilder,
@@ -219,7 +219,7 @@ public class MixinBlockFluidRenderer {
                 0.5f,
                 0.5f,
                 0.5f,
-                lightD
+                lightDown
             );
         }
 
@@ -300,9 +300,9 @@ public class MixinBlockFluidRenderer {
             }
 
             TextureAtlasSprite sprite = sprites[1];
+            mutablePos.setPos(pos).move(direction);
 
             if (!isLava) {
-                mutablePos.setPos(pos).move(direction);
                 IBlockState offsetState = blockAccess.getBlockState(mutablePos);
 
                 if (offsetState.getBlockFaceShape(blockAccess, mutablePos, EnumFacing.VALUES[i + 2].getOpposite())
@@ -322,6 +322,8 @@ public class MixinBlockFluidRenderer {
             float sideR = shade * red;
             float sideG = shade * green;
             float sideB = shade * blue;
+
+            int lightSide = blockState.getPackedLightmapCoords(blockAccess, mutablePos);
 
             fastmc_allocfix$quad(
                 bufferBuilder,
@@ -348,7 +350,7 @@ public class MixinBlockFluidRenderer {
                 sideR,
                 sideG,
                 sideB,
-                light
+                lightSide
             );
 
             if (sprite != this.atlasSpriteWaterOverlay) {
@@ -377,7 +379,7 @@ public class MixinBlockFluidRenderer {
                     sideR,
                     sideG,
                     sideB,
-                    light
+                    lightSide
                 );
             }
         }
