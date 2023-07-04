@@ -7,12 +7,14 @@ import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 
 @Mixin(BufferBuilder.class)
 public abstract class MixinBufferBuilder {
@@ -28,20 +30,29 @@ public abstract class MixinBufferBuilder {
     private double zOffset;
     @Shadow
     private int vertexCount;
-    private QuadSort quadSort;
-    private ByteBuffer temp;
+
+    @Shadow
+    private IntBuffer rawIntBuffer;
+
+    @Shadow
+    protected abstract int getBufferSize();
+
+    @Unique
+    private QuadSort fastmc_allocfix$quadSort;
+    @Unique
+    private ByteBuffer fastmc_allocfix$temp;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void Inject$init$RETURN(int initialCapacity, CallbackInfo ci) {
-        temp = byteBuffer.duplicate();
-        temp.order(ByteOrder.nativeOrder());
+        fastmc_allocfix$temp = byteBuffer.duplicate();
+        fastmc_allocfix$temp.order(ByteOrder.nativeOrder());
     }
 
 
     @Inject(method = "growBuffer", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/BufferBuilder;byteBuffer:Ljava/nio/ByteBuffer;", shift = At.Shift.AFTER))
     private void Inject$grow$FIELD$PUTFIELD$byteBuffer(int initialCapacity, CallbackInfo ci) {
-        temp = byteBuffer.duplicate();
-        temp.order(ByteOrder.nativeOrder());
+        fastmc_allocfix$temp = byteBuffer.duplicate();
+        fastmc_allocfix$temp.order(ByteOrder.nativeOrder());
     }
 
     /**
@@ -50,17 +61,14 @@ public abstract class MixinBufferBuilder {
      */
     @Overwrite
     public void sortVertexData(float cameraX, float cameraY, float cameraZ) {
-        if (quadSort == null) {
-            quadSort = new QuadSort();
+        if (fastmc_allocfix$quadSort == null) {
+            fastmc_allocfix$quadSort = new QuadSort();
         }
 
-        int prevPos = byteBuffer.position();
-        int prevLimit = byteBuffer.limit();
-
         VertexFormat format = vertexFormat;
-        quadSort.sortQuads(
+        fastmc_allocfix$quadSort.sortQuads(
             byteBuffer,
-            temp,
+            fastmc_allocfix$temp,
             0,
             (float) (cameraX + xOffset),
             (float) (cameraY + yOffset),
@@ -69,7 +77,9 @@ public abstract class MixinBufferBuilder {
             format.getSize()
         );
 
-        byteBuffer.position(prevPos);
-        byteBuffer.limit(prevLimit);
+        byteBuffer.clear();
+
+        rawIntBuffer.limit(rawIntBuffer.capacity());
+        rawIntBuffer.position(getBufferSize());
     }
 }

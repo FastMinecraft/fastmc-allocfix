@@ -32,7 +32,7 @@ public final class QuadSort {
         int[] sortArray = helper.getSortArray();
 
         for (int i = 0; i < quadCount; ++i) {
-            distanceArray[i] = getDistanceSq(
+            distanceArray[i] = -getDistanceSq(
                 rawBuffer,
                 cameraX,
                 cameraY,
@@ -62,18 +62,18 @@ public final class QuadSort {
                 tempBuffer.put(rawBuffer);
                 tempBuffer.flip();
 
-                int swapToIndex = indexTo;
+                int dstIndex = indexTo;
 
-                for (int swapFromIndex = sortArray[indexTo]; swapToIndex != indexFrom; swapFromIndex = sortArray[swapFromIndex]) {
-                    temp.limit(bufferOffset + swapFromIndex * quadByteSize + quadByteSize);
-                    temp.position(bufferOffset + swapFromIndex * quadByteSize);
+                for (int srcIndex = sortArray[indexTo]; dstIndex != indexFrom; srcIndex = sortArray[srcIndex]) {
+                    temp.limit(bufferOffset + srcIndex * quadByteSize + quadByteSize);
+                    temp.position(bufferOffset + srcIndex * quadByteSize);
 
-                    rawBuffer.limit(bufferOffset + swapToIndex * quadByteSize + quadByteSize);
-                    rawBuffer.position(bufferOffset + swapToIndex * quadByteSize);
+                    rawBuffer.limit(bufferOffset + dstIndex * quadByteSize + quadByteSize);
+                    rawBuffer.position(bufferOffset + dstIndex * quadByteSize);
                     rawBuffer.put(temp);
 
-                    bitset.set(swapToIndex);
-                    swapToIndex = swapFromIndex;
+                    bitset.set(dstIndex);
+                    dstIndex = srcIndex;
                 }
 
                 rawBuffer.limit(bufferOffset + indexFrom * quadByteSize + quadByteSize);
@@ -110,9 +110,9 @@ public final class QuadSort {
         float y4 = buffer.getFloat(bufferOffset + vertexByteSize * 3 + 4);
         float z4 = buffer.getFloat(bufferOffset + vertexByteSize * 3 + 8);
 
-        float xDiff = (x1 + x2 + x3 + x4) * 0.25F - cameraX;
-        float yDiff = (y1 + y2 + y3 + y4) * 0.25F - cameraY;
-        float zDiff = (z1 + z2 + z3 + z4) * 0.25F - cameraZ;
+        float xDiff = (x1 + x2 + x3 + x4) * 0.25f - cameraX;
+        float yDiff = (y1 + y2 + y3 + y4) * 0.25f - cameraY;
+        float zDiff = (z1 + z2 + z3 + z4) * 0.25f - cameraZ;
 
         return xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
     }

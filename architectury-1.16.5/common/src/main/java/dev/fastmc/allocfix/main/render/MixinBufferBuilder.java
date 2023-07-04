@@ -87,8 +87,8 @@ public abstract class MixinBufferBuilder implements IPatchedBufferBuilder {
             format.getVertexSize()
         );
 
-        buffer.position(prevPos);
         buffer.limit(prevLimit);
+        buffer.position(prevPos);
     }
 
     /**
