@@ -7,9 +7,9 @@ public class PatchedCubicSampler {
     private static final float[] DENSITY_CURVE = new float[]{ 0.0f, 1.0f, 4.0f, 6.0f, 4.0f, 1.0f, 0.0f };
 
     public static int sampleColor(double x, double y, double z, RgbFetcher rgbFetcher) {
-        int intX = MathUtilsKt.fastFloor(x);
-        int intY = MathUtilsKt.fastFloor(y);
-        int intZ = MathUtilsKt.fastFloor(z);
+        int intX = MathUtilsKt.floorToInt(x);
+        int intY = MathUtilsKt.floorToInt(y);
+        int intZ = MathUtilsKt.floorToInt(z);
         float dx = (float) (x - intX);
         float dy = (float) (y - intY);
         float dz = (float) (z - intZ);
